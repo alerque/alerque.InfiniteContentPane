@@ -26,16 +26,15 @@
 	</style>
 
 	<script type="text/javascript">
-		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dojox.layout.InfiniteContentPane"); 
-		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+		dojo.require("dojo.parser");
+		dojo.require("dojo.Defered");
 
 		dojo.addOnLoad(function(){
 			dojo.parser.parse();
 		});
 
-		var fetch_more = function() {
-		};
+		var fetch_more = new dojo.Defered();
 	</script>
 
 </head>
