@@ -1,41 +1,48 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<title>Infinite Scrolling Content Pane</title>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<title>Infinite Content Pane test</title>
 
-		<!-- required: a default dijit theme: -->
-		<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css"/>
+	<script src='../../../dojo/dojo.js' djConfig='isDebug:true, parseOnLoad:true'></script>
+	<script src='../../../dojo/html.js'></script>
+	<script src='../../../dojox/html/_base.js'></script>
+	<script src='../../../dojox/layout/InfiniteContentPane.js'></script>
 
-		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../dojo/dojo.js"
-			data-dojo-config="isDebug: true; parseOnLoad:true"></script>
+	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+		@import "../../../dijit/themes/claro/claro.css";
+		@import "../../../dijit/tests/css/dijitTests.css";
 
-		<!-- not needed, for testing alternate themes -->
-		<script type="text/javascript" src="_testCommon.js"></script>
+		#scroller {
+			width: 20em;
+			height: 20em;
+			border: 1px solid #000;
+			overflow: auto;
+		}
+	</style>
 
-		<script type="text/javascript">
-			dojo.require("dojox.layout.InfiniteContentPane");
+	<script type="text/javascript">
+		dojo.require("dijit.layout.ContentPane");
+		dojo.require("dojox.layout.InfiniteContentPane"); 
+		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 
-			dojo.ready(function(){
-			});
-		</script>
+		dojo.addOnLoad(function(){
+			dojo.parser.parse();
+		});
+	</script>
 
-		<style type="text/css">
-			#scroller {
-				width: 20em;
-				height: 20em;
-			}
-		</style>
-	</head>
-	<body class="claro">
+</head>
+<body class="claro">
 		
 		<h1 class="testTitle">dojox.layout.InfiniteContentPane</h1>
 		<p>
 			Widget desc...
 		</p>
 
-		<div id="scroller" data-dojo-type="dojox.layout.InfiniteContentPane">Starter Content</div>
+		<div id="scroller" data-dojo-type="dojox.layout.InfiniteContentPane">
+			Starter Content
+		</div>
 
-	</body>
+</body>
 </html>
