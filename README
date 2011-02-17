@@ -1,0 +1,5 @@
+Something similar to the jQeruy Infinite Scroll plugin: https://github.com/paulirish/infinite-scroll
+
+Based on dijit.layout.ContentPane
+
+User supplied dojo.defered for data fetch.

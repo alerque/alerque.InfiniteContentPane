@@ -33,6 +33,9 @@
 		dojo.addOnLoad(function(){
 			dojo.parser.parse();
 		});
+
+		var fetch_more = function() {
+		};
 	</script>
 
 </head>
@@ -43,7 +46,7 @@
 			Widget desc...
 		</p>
 
-		<div id="scroller" data-dojo-type="dojox.layout.InfiniteContentPane">
+		<div id="scroller" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-type="fetcher: fetch_more">
 			<p>Starter Content</p>
 			<p>Starter Content</p>
 			<p>Starter Content</p>
