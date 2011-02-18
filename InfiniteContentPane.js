@@ -12,11 +12,10 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 
 	_paneHeight: 0, // this is private because it can't be set externally, it's just the size we read ourselves to be
 	_scrollHeight: 0,
+	_connect: null, // a handle for our on scroll event so we can shut it off the workings if we run out of data
 
 	postCreate: function () {
-		this.connect(this.domNode, "onscroll", "_onScroll");
-
-		console.log(this.fetcher);
+		this._connect = this.connect(this.domNode, "onscroll", "_onScroll");
 
 		this._calc();
 
@@ -45,15 +44,22 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 	},
 
 	_fetch: function () {
-		// Do something with the deferred fetcher we were given
-		// Connect it's clalback to our data handler
-
 		this.fetchCount += 1;
 
-		this.fetcher.fetch(this.fetchCount, dojo.hitch(this, this._fetcherCallback));
+		// Wire up the fetcher we were given to our internal data handler.
+		// The retun value of the fetchers fetch function should indicate
+		// if we should keep scrolling or call it quits.
+		var ret = this.fetcher.fetch(this.fetchCount, dojo.hitch(this, this._fetcherCallback));
+		if (ret === false) {
+			return this._disable();
+		}
 	},
 
 	_fetcherCallback: function (data) {
+		// If we get nothing back, presume we've reached the end of the possible data
+		if (!data.length) {
+			return this._disable();
+		}
 		// handle data comming in from the fetcher
 		dojo.place(data, this.domNode, 'last');
 
@@ -61,5 +67,10 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 		this._calc();
 
 		// reactivate scroll watcher if suspended above
+	},
+
+	_disable: function() {
+		dojo.disconnect(this._connect[0]);
 	}
+
 });

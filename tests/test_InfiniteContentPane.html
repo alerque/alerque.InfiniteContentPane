@@ -46,7 +46,11 @@
 
 		var return_more = {
 			fetch: function(count, callback) {
+				// Send back some simple generated content
 				callback("<p>Send back more data " + count + "</p>");
+
+				// Turn the thing off after we've sent back x amount of replies
+				return count < 10;
 			}
 		}
 	</script>
