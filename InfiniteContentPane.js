@@ -10,18 +10,32 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 	triggerZoneSize: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
 	fetchCount: 0, // Iterator showing how many times we've expanded. Might be useful to return to our fetcher
 
-    containerHeight: 0,
+    _paneHeight: 0, // this is private because it can't be set externally, it's just the size we read ourselves to be
+	_scrollHeight: 0,
 
     postCreate: function () {
         this.inherited(arguments);
 
-        this.containerHeight = dojo._getMarginSize(this.domNode).h; // Note used private function _getMarginSize instead of maginBox because all we need is h and this is nicer to IE
-
 		var connect = this.connect(this.domNode, "onscroll", "_onScroll");
+
+		// Connect an onresize function to our parent pane to _calc and _onScroll
+		this._calc();
     },
 
-	_onScroll: function() {
-		console.log(this, arguments);
+	_calc: function() {
+        this._paneHeight = dojo._getMarginSize(this.domNode).h;
+		this._scrollHeight = this.domNode['scrollHeight'];
+	},
+
+	_onScroll: function(/* Event */e) {
+		var bottomPos = this.domNode['scrollTop'] + this._paneHeight; // 
+		console.log(bottomPos);
+
+		if (bottomPos > (this._scrollHeight - this.triggerZoneSize)) {
+			this._fetcherCallback();
+		}
+
+		// Find our current position
 
 		// test if trigger zone visiable
 		
@@ -36,6 +50,9 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 		console.log(this, arguments);
 		// handle data comming in from the fether, dojo.place(this.domNode, $incomingdata, last)?
 		
+		// Update our knowledge about ourselves now that we stuffed new data
+		this._calc();
+
 		// reactivate scroll watcher if suspended above
 	}
 });
