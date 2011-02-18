@@ -1,3 +1,4 @@
+dojo.require("dojo.parser");
 dojo.require("dijit.layout.ContentPane");
 dojo.experimental("dojox.layout.InfiniteContentPane");
 
@@ -64,10 +65,16 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 			return this._disable();
 		}
 
-		// TODO: trigger parser if parseOnLoad is true
+		// Place content in a wrapper so we can parse it if we need to
+		var wrapper = dojo.create("div", {class: 'dojoxInfiniteContentPane', innerHTML: data});
+		dojo.place(wrapper, this.domNode, 'last');
+
+		if (this.parseOnLoad) {
+			dojo.parser.parse(wrapper);
+		}
 
 		// Append stuff comming in from the fetcher to the pane
-		dojo.place(data, this.domNode, 'last');
+		dojo.place(wrapper, this.domNode, 'last');
 
 		// Update our knowledge about ourselves now that we stuffed new data
 		this._calc();
