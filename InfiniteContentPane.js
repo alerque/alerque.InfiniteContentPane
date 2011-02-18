@@ -6,20 +6,16 @@ dojo.provide("dojox.layout.InfiniteContentPane");
 dojo.declare("dojox.layout.InfiniteContentPane",
 		[dijit.layout.ContentPane],
 {
-	fetcher: false,
+	fetcher: false, // dojo.Deferred given us for returning the next content
+	triggerZoneSize: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
+	fetchCount: 0, // Iterator showing how many times we've expanded. Might be useful to return to our fetcher
 
-    //buffer to initiate request while scrolling to make seemless.  
-    bufferHeightPx: 0,
     containerHeight: 0,
 
     postCreate: function () {
         this.inherited(arguments);
 
-        //if we use this we'll have to watch resize and reset it if the content pane is a %
-        this.containerHeight = dojo.marginBox(this.domNode).h; //TODO: if height is all we need use fetcher that doesn't kill IE performance
-
-        //make buffer size 10% of total height?
-        this.bufferHeightPx = this.containerHeight * .10;
+        this.containerHeight = dojo._getMarginSize(this.domNode).h; // Note used private function _getMarginSize instead of maginBox because all we need is h and this is nicer to IE
     },
 
 	_onScroll: function() {
