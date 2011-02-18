@@ -36,7 +36,7 @@
 		// Example fetcher using xhr that knows which 'page' is being fetched.
 		var fetch_more = function(callback, count) {
 			return dojo.xhrGet({
-				url: "extra_content.html?page=" + count,
+				url: "doc0.html?page=" + count,
 				load: function(data) {
 					callback(data);
 				}
