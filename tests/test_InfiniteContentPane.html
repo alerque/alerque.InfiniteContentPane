@@ -4,10 +4,10 @@
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Infinite Content Pane test</title>
 
-	<script src='../../../dojo/dojo.js' djConfig='isDebug:true'></script>
-	<script src='../../../dojo/html.js'></script>
-	<script src='../../../dojox/html/_base.js'></script>
-	<script src='../InfiniteContentPane.js'></script>
+	<script type="text/javascript" src='../../../dojo/dojo.js' djConfig='isDebug:true'></script>
+	<script type="text/javascript" src='../../../dojo/html.js'></script>
+	<script type="text/javascript" src='../../../dojox/html/_base.js'></script>
+	<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
 
 	<style type="text/css">
 		@import "../../../dojo/resources/dojo.css";
@@ -26,15 +26,14 @@
 	</style>
 
 	<script type="text/javascript">
-		dojo.require("dojox.layout.InfiniteContentPane"); 
 		dojo.require("dojo.parser");
-		dojo.require("dojo.Defered");
+		dojo.require("dojox.layout.InfiniteContentPane"); 
 
 		dojo.addOnLoad(function(){
 			dojo.parser.parse();
 		});
 
-		var fetch_more = new dojo.Defered();
+		var fetch_more = new dojo.Deferred();
 	</script>
 
 </head>
