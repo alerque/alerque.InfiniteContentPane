@@ -52,6 +52,11 @@
 			return count < 10;
 		};
 
+		// Example fetcher that has extra delay
+		var delay_more = function(callback, count) {
+			setTimeout(function() { callback('<p>Return content late, count: '+count+'</p>'); }, Math.floor(Math.random()*2000));
+		};
+
 	</script>
 
 </head>
@@ -71,6 +76,12 @@
 		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: return_more, triggerHeight: 1">
 			<p>Returns data generated in the test javascript. Will disable after ten hits.</p>
 			<p>Trigger zone is 1px, will only load when you hit the very end.</p>
+			<p>Starter content.</p>
+		</div>
+
+		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: delay_more">
+			<p>Returns generated data, but on a timeout so it's late</p>
+			<p>Starter content.</p>
 			<p>Starter content.</p>
 		</div>
 
