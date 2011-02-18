@@ -57,7 +57,7 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 		// Start a placeholder for content that we'll be fetching.
 		// Doing this now let's us set a loading message and keeps
 		// content in order as it comes back.
-		var wrapper = dojo.create("div", {class: 'dojoxInfiniteContentPane', innerHTML: '<p>Loading...</p>'});
+		var wrapper = dojo.create('div', {'class': 'dojoxInfiniteContentPane', 'innerHTML': '<p>Loading...</p>'});
 		dojo.place(wrapper, this.domNode, 'last');
 
 		// Start up a deferred objet to handle data when it comes
