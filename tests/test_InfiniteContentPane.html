@@ -31,7 +31,10 @@
 			dojo.parser.parse();
 		});
 
-		var fetch_more = new dojo.Deferred();
+		var fetch_more = dojo.xhrGet({
+			url: "extra_content.html"
+		});
+
 	</script>
 
 </head>
@@ -42,7 +45,7 @@
 			Continuous scroll layout pane that fires a event to fetch more data when aproaching either end.
 		</p>
 
-		<div id="scroller" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-type="fetcher: fetch_more">
+		<div id="scroller" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: fetch_more">
 			<p>Starter content.</p>
 			<p>Starter content.</p>
 			<p>Starter content.</p>

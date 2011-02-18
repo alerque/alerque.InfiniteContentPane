@@ -6,68 +6,60 @@ dojo.provide("dojox.layout.InfiniteContentPane");
 dojo.declare("dojox.layout.InfiniteContentPane",
 		[dijit.layout.ContentPane],
 {
-    fetcher: false, // dojo.Deferred given us for returning the next content
-    triggerZoneSize: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
-    fetchCount: 0, // Iterator showing how many times we've expanded. Might be useful to return to our fetcher
+	fetcher: false, // dojo.Deferred given us for returning the next content
+	triggerZoneSize: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
+	fetchCount: 0, // Iterator showing how many times we've expanded. Might be useful to return to our fetcher
 
-    _paneHeight: 0, // this is private because it can't be set externally, it's just the size we read ourselves to be
-    _scrollHeight: 0,
+	_paneHeight: 0, // this is private because it can't be set externally, it's just the size we read ourselves to be
+	_scrollHeight: 0,
 
-    postCreate: function () {
-        this.connect(this.domNode, "onscroll", "_onScroll");
+	postCreate: function () {
+		this.connect(this.domNode, "onscroll", "_onScroll");
 
-        this._calc();
+		console.log(this.fetcher);
 
-        // Connect an onresize function to our parent pane to _calc and _onScroll
+		this._calc();
 
-        return this.inherited(arguments);
-    },
+		// Connect an onresize function to our parent pane to _calc and _onScroll
 
-    _calc: function () {
-        this._paneHeight = dojo._getMarginSize(this.domNode).h;
-        this._scrollHeight = this.domNode['scrollHeight'];
-    },
+		return this.inherited(arguments);
+	},
 
-    _onScroll: function (/* Event */e) {
-        var bottomPos = this.domNode['scrollTop'] + this._paneHeight;
+	_calc: function () {
+		this._paneHeight = dojo._getMarginSize(this.domNode).h;
+		this._scrollHeight = this.domNode['scrollHeight'];
+	},
 
-        if (bottomPos > (this._scrollHeight - this.triggerZoneSize)) {
-            this._fetch();
-        }
+	_onScroll: function (/* Event */e) {
+		// Find our current position
+		var bottomPos = this.domNode['scrollTop'] + this._paneHeight;
 
-        // Find our current position
+		// Do the math to see if the trigger zone area has scrolled into view
+		if (bottomPos > (this._scrollHeight - this.triggerZoneSize)) {
+			// If so tell tigger our fetch method to go get more data
+			this._fetch();
+		}
 
-        // test if trigger zone visiable
+		// set timeout so we don't fire to often?
+		// disconnect scroll notifier until we get previous data?
+	},
 
-        // set timeout so we don't fire to often?
+	_fetch: function () {
+		// Do something with the deferred fetcher we were given
+		// Connect it's clalback to our data handler
 
-        // notify our fetcher that we need data. pass back count? or position data?
+		this.fetchCount += 1;
 
-        // disconnect scroll notifier until we get previous data?
-    },
+		dojo.when(this.fetcher, dojo.hitch(this, this._fetcherCallback));
+	},
 
-    _fetch: function () {
-        // Do something with the deferred fetcher we were given
-        // Connect it's clalback to our data handler
+	_fetcherCallback: function (data) {
+		// handle data comming in from the fetcher
+		dojo.place(data, this.domNode, 'last');
 
-        // For debug, just give us something. 
+		// Update our knowledge about ourselves now that we stuffed new data
+		this._calc();
 
-        //would you realistically use the fether deferred here?
-        var d = dojo.xhrGet({
-            url: "extra_content.html",
-            content: { fragment: ++this.fetchCount }
-        });
-
-        dojo.when(d, dojo.hitch(this, this._fetcherCallback));
-    },
-
-    _fetcherCallback: function (data) {
-        // handle data comming in from the fetcher
-        dojo.place(data, this.domNode, 'last');
-
-        // Update our knowledge about ourselves now that we stuffed new data
-        this._calc();
-
-        // reactivate scroll watcher if suspended above
-    }
+		// reactivate scroll watcher if suspended above
+	}
 });
