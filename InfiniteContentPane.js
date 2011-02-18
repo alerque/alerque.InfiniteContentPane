@@ -14,12 +14,13 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 	_scrollHeight: 0,
 
     postCreate: function () {
-        this.inherited(arguments);
+		this.connect(this.domNode, "onscroll", "_onScroll");
 
-		var connect = this.connect(this.domNode, "onscroll", "_onScroll");
+		this._calc();
 
 		// Connect an onresize function to our parent pane to _calc and _onScroll
-		this._calc();
+
+        return this.inherited(arguments);
     },
 
 	_calc: function() {
@@ -28,8 +29,7 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 	},
 
 	_onScroll: function(/* Event */e) {
-		var bottomPos = this.domNode['scrollTop'] + this._paneHeight; // 
-		console.log(bottomPos);
+		var bottomPos = this.domNode['scrollTop'] + this._paneHeight;
 
 		if (bottomPos > (this._scrollHeight - this.triggerZoneSize)) {
 			this._fetcherCallback();
@@ -47,8 +47,11 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 	},
 
 	_fetcherCallback: function() {
-		console.log(this, arguments);
+		console.log("Need to fetch more data!");
+
 		// handle data comming in from the fether, dojo.place(this.domNode, $incomingdata, last)?
+		var demo = dojo.create("p", {innerHTML: 'demo more data'})
+		dojo.place(demo, this.domNode, 'last');
 		
 		// Update our knowledge about ourselves now that we stuffed new data
 		this._calc();
