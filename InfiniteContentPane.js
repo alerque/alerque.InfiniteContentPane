@@ -32,7 +32,7 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 		var bottomPos = this.domNode['scrollTop'] + this._paneHeight;
 
 		if (bottomPos > (this._scrollHeight - this.triggerZoneSize)) {
-			this._fetcherCallback();
+			this._fetch();
 		}
 
 		// Find our current position
@@ -46,12 +46,19 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 	 	// disconnect scroll notifier until we get previous data?
 	},
 
-	_fetcherCallback: function() {
-		console.log("Need to fetch more data!");
+	_fetch: function() {
+		// Do something with the deferred fetcher we were given
+		// Connect it's clalback to our data handler
 
-		// handle data comming in from the fether, dojo.place(this.domNode, $incomingdata, last)?
-		var demo = dojo.create("p", {innerHTML: 'demo more data'})
-		dojo.place(demo, this.domNode, 'last');
+		// For debug, just give us soething
+		var demo_data = dojo.create("p", {innerHTML: 'demo more data: ' + this.fetchCount})
+		this._fetcherCallback(demo_data);
+		this.fetchCount += 1;
+	},
+
+	_fetcherCallback: function(data) {
+		// handle data comming in from the fetcher
+		dojo.place(data, this.domNode, 'last');
 		
 		// Update our knowledge about ourselves now that we stuffed new data
 		this._calc();
