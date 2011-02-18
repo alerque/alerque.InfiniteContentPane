@@ -41,45 +41,48 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 			this._fetch();
 		}
 
-		// TODO: set timeout so we don't fire to often?
+		// TODO: set timeout so we don't fire fetch to often.?
+		// TODO: Maybe count if we have an outstanding deferred?
 		// TODO: disconnect scroll notifier until we get previous data?
 	},
 
 	_fetch: function () {
 		this.fetchCount += 1;
 
-		// TODO: show loading content?
+		// Start a placeholder for content that we'll be fetching.
+		// Doing this now let's us set a loading message and keeps
+		// content in order as it comes back.
+		var wrapper = dojo.create("div", {class: 'dojoxInfiniteContentPane', innerHTML: 'Loading...'});
+		dojo.place(wrapper, this.domNode, 'last');
 
-		// Wire up the fetcher we were given to our internal data handler.
-		// The retun value of the fetchers fetch function should indicate
-		// if we should keep scrolling or call it quits.
-		var ret = this.fetcher(dojo.hitch(this, this._fetcherCallback), this.fetchCount);
+		// Start up a deferred objet to handle data when it comes
+		// back from our fetcher
+		var deferred = new dojo.Deferred();
+		deferred.then(dojo.hitch(this, function(data) {
+			// If we get nothing back, presume we've reached the end of the possible data
+			if (!data.length) {
+				return this._disable();
+			}
+
+			wrapper.innerHTML = data;
+
+			if (this.parseOnLoad) {
+				dojo.parser.parse(wrapper);
+			}
+
+			// Update our knowledge about ourselves now that we stuffed new data
+			this._calc();
+			
+			// TODO: reactivate scroll watcher if suspended above
+		}));
+
+		// Wire up the the deferred handle we just made to a new instance
+		// of the fetcher we were given. The value should indicate whether
+		// there is a possibility of more data or not.
+		var ret = this.fetcher(dojo.hitch(this, deferred.callback), this.fetchCount);
 		if (ret === false) {
 			return this._disable();
 		}
-	},
-
-	_fetcherCallback: function (data) {
-		// If we get nothing back, presume we've reached the end of the possible data
-		if (!data.length) {
-			return this._disable();
-		}
-
-		// Place content in a wrapper so we can parse it if we need to
-		var wrapper = dojo.create("div", {class: 'dojoxInfiniteContentPane', innerHTML: data});
-		dojo.place(wrapper, this.domNode, 'last');
-
-		if (this.parseOnLoad) {
-			dojo.parser.parse(wrapper);
-		}
-
-		// Append stuff comming in from the fetcher to the pane
-		dojo.place(wrapper, this.domNode, 'last');
-
-		// Update our knowledge about ourselves now that we stuffed new data
-		this._calc();
-
-		// TODO: reactivate scroll watcher if suspended above
 	},
 
 	_disable: function() {

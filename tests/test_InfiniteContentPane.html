@@ -52,7 +52,7 @@
 			return count < 10;
 		};
 
-		// Example fetcher that has extra delay
+		// Example fetcher that has up to a couple seconds random delay
 		var delay_more = function(callback, count) {
 			setTimeout(function() { callback('<p>Return content late, count: '+count+'</p>'); }, Math.floor(Math.random()*2000));
 		};
@@ -81,7 +81,7 @@
 
 		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: delay_more">
 			<p>Returns generated data, but on a timeout so it's late</p>
-			<p>Starter content.</p>
+			<p>Demonstrates that content is shown in order even when returned at various odd times.</p>
 			<p>Starter content.</p>
 		</div>
 
