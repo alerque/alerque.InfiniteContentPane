@@ -54,7 +54,8 @@
 
 		// Example fetcher that has up to a couple seconds random delay
 		var delay_more = function(callback, count) {
-			setTimeout(function() { callback('<p>Return content late, count: '+count+'</p>'); }, Math.floor(Math.random()*2000));
+			var delay = Math.floor(Math.random()*2000);
+			setTimeout(function() { callback('<p>Return content late, count: '+count+', delay: '+delay+'</p>'); }, delay);
 		};
 
 	</script>
