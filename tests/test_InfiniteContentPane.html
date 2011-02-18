@@ -27,6 +27,8 @@
 
 	<script type="text/javascript">
 		dojo.require("dojo.parser");
+		dojo.require("dijit.form.Button"); // Used to test child widgets
+		dojo.require("dijit.form.TextBox"); // Used in test content
 		dojo.require("dojox.layout.InfiniteContentPane"); 
 
 		dojo.addOnLoad(function(){
@@ -60,7 +62,7 @@
 		</p>
 
 		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: fetch_more">
-			<p>Returns data loaded using an xhrGet. Returns infinitely</p>
+			<p>Returns data loaded using an xhrGet. Returns infinitely. <input data-dojo-type="dijit.form.Button" data-dojo-props="label: 'Test button'" /></p>
 			<p>Starter content.</p>
 			<p>Starter content.</p>
 		</div>
