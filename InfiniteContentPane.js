@@ -16,9 +16,26 @@ dojo.declare("dojox.layout.InfiniteContentPane",
         this.inherited(arguments);
 
         this.containerHeight = dojo._getMarginSize(this.domNode).h; // Note used private function _getMarginSize instead of maginBox because all we need is h and this is nicer to IE
+
+		var connect = this.connect(this.domNode, "onscroll", "_onScroll");
     },
 
 	_onScroll: function() {
 		console.log(this, arguments);
+
+		// test if trigger zone visiable
+		
+		// set timeout so we don't fire to often?
+
+		// notify our fetcher that we need data. pass back count? or position data?
+
+	 	// disconnect scroll notifier until we get previous data?
+	},
+
+	_fetcherCallback: function() {
+		console.log(this, arguments);
+		// handle data comming in from the fether, dojo.place(this.domNode, $incomingdata, last)?
+		
+		// reactivate scroll watcher if suspended above
 	}
 });
