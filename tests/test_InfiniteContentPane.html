@@ -33,26 +33,23 @@
 			dojo.parser.parse();
 		});
 
-		var fetch_more = {
-			fetch: function(count, callback) {
-				return dojo.xhrGet({
-					url: "extra_content.html",
-					load: function(data) {
-						callback(data);
-					}
-				});
-			}
-		}
+		var fetch_more = function(callback, count) {
+			return dojo.xhrGet({
+				url: "extra_content.html",
+				load: function(data) {
+					callback(data);
+				}
+			});
+		};
+	
 
-		var return_more = {
-			fetch: function(count, callback) {
-				// Send back some simple generated content
-				callback("<p>Send back more data " + count + "</p>");
+		var return_more = function(callback, count) {
+			// Send back some simple generated content
+			callback("<p>Send back more data " + count + "</p>");
 
-				// Turn the thing off after we've sent back x amount of replies
-				return count < 10;
-			}
-		}
+			// Turn the thing off after we've sent back x amount of replies
+			return count < 10;
+		};
 	</script>
 
 </head>

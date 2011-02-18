@@ -49,7 +49,7 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 		// Wire up the fetcher we were given to our internal data handler.
 		// The retun value of the fetchers fetch function should indicate
 		// if we should keep scrolling or call it quits.
-		var ret = this.fetcher.fetch(this.fetchCount, dojo.hitch(this, this._fetcherCallback));
+		var ret = this.fetcher(dojo.hitch(this, this._fetcherCallback), this.fetchCount);
 		if (ret === false) {
 			return this._disable();
 		}
