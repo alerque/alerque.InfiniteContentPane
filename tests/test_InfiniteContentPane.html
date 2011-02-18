@@ -62,15 +62,15 @@
 			Continuous scroll layout pane that fires a event to fetch more data when aproaching either end.
 		</p>
 
-		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: fetch_more">
+		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: fetch_more, triggerHeight: 500">
 			<p>Returns data loaded using an xhrGet. Returns infinitely. <input data-dojo-type="dijit.form.Button" data-dojo-props="label: 'Test button'" /></p>
-			<p>Starter content.</p>
+			<p>Tigger zone here is big enough to trigger a load on first touching the scroll bar and probably load more than one set of content right away.</p>
 			<p>Starter content.</p>
 		</div>
 
-		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: return_more">
+		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: return_more, triggerHeight: 1">
 			<p>Returns data generated in the test javascript. Will disable after ten hits.</p>
-			<p>Starter content.</p>
+			<p>Trigger zone is 1px, will only load when you hit the very end.</p>
 			<p>Starter content.</p>
 		</div>
 

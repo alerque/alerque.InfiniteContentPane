@@ -8,7 +8,7 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 		[dijit.layout.ContentPane],
 {
 	fetcher: null, // dojo.Deferred given us for returning the next content
-	triggerZoneSize: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
+	triggerHeight: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
 	fetchCount: 0, // Iterator showing how many times we've expanded. Might be useful to return to our fetcher
 
 	_paneHeight: 0, // this is private because it can't be set externally, it's just the size we read ourselves to be
@@ -36,7 +36,7 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 		var bottomPos = this.domNode['scrollTop'] + this._paneHeight;
 
 		// Do the math to see if the trigger zone area has scrolled into view
-		if (bottomPos > (this._scrollHeight - this.triggerZoneSize)) {
+		if (bottomPos > (this._scrollHeight - this.triggerHeight)) {
 			// If so tell tigger our fetch method to go get more data
 			this._fetch();
 		}
