@@ -12,13 +12,15 @@
 		@import "../../../dijit/themes/claro/claro.css";
 		@import "../../../dijit/tests/css/dijitTests.css";
 
-		#scroller {
+		.testpane {
 			width: 20em;
 			height: 20em;
 			border: 1px solid #000;
 			overflow: auto;
+			display: inline-block;
+			margin-right: 1em;
 		}
-		#scroller p {
+		.testpane p {
 			margin-bottom: 12em;
 		}
 	</style>
@@ -31,10 +33,22 @@
 			dojo.parser.parse();
 		});
 
-		var fetch_more = dojo.xhrGet({
-			url: "extra_content.html"
-		});
+		var fetch_more = {
+			fetch: function(count, callback) {
+				return dojo.xhrGet({
+					url: "extra_content.html",
+					load: function(data) {
+						callback(data);
+					}
+				});
+			}
+		}
 
+		var return_more = {
+			fetch: function(count, callback) {
+				callback("<p>Send back more data " + count + "</p>");
+			}
+		}
 	</script>
 
 </head>
@@ -45,8 +59,14 @@
 			Continuous scroll layout pane that fires a event to fetch more data when aproaching either end.
 		</p>
 
-		<div id="scroller" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: fetch_more">
+		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: fetch_more">
+			<p>Returns data loaded using an xhrGet.</p>
 			<p>Starter content.</p>
+			<p>Starter content.</p>
+		</div>
+
+		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: return_more">
+			<p>Returns data generated in the test javascript.</p>
 			<p>Starter content.</p>
 			<p>Starter content.</p>
 		</div>

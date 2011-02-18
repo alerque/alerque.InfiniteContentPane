@@ -50,7 +50,7 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 
 		this.fetchCount += 1;
 
-		dojo.when(this.fetcher, dojo.hitch(this, this._fetcherCallback));
+		this.fetcher.fetch(this.fetchCount, dojo.hitch(this, this._fetcherCallback));
 	},
 
 	_fetcherCallback: function (data) {
