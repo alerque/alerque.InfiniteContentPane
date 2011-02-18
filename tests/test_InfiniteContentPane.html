@@ -4,10 +4,10 @@
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Infinite Content Pane test</title>
 
-	<script type="text/javascript" src='../../../dojo/dojo.js' djConfig='isDebug:true'></script>
-	<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
+	<script src='../../../dojo/dojo.js' djConfig='isDebug:true'></script>
+	<script src="../../../dijit/tests/_testCommon.js"></script>
 
-	<style type="text/css">
+	<style>
 		@import "../../../dojo/resources/dojo.css";
 		@import "../../../dijit/themes/claro/claro.css";
 		@import "../../../dijit/tests/css/dijitTests.css";
@@ -20,11 +20,11 @@
 			margin-right: 1em;
 		}
 		.testpane p {
-			margin-bottom: 12em;
+			margin: 0 0 10em 0;
 		}
 	</style>
 
-	<script type="text/javascript">
+	<script>
 		dojo.require("dojo.parser");
 		dojo.require("dijit.layout.BorderContainer"); // Used to test resize of widget
 		dojo.require("dijit.layout.ContentPane");
