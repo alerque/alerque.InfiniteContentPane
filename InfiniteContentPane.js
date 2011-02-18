@@ -22,8 +22,13 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 
 		this._calc();
 
-		// TODO: Connect an onresize function to our parent pane to _calc and _onScroll
-
+		return this.inherited(arguments);
+	},
+	
+	resize: function() {
+		// if we got resized, recalculate our size and then simulate a scroll event
+		this._calc();
+		this._onScroll();
 		return this.inherited(arguments);
 	},
 
@@ -44,10 +49,6 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 				this._fetch();
 			}
 		}
-
-		// TODO: set timeout so we don't fire fetch to often.?
-		// TODO: Maybe count if we have an outstanding deferred?
-		// TODO: disconnect scroll notifier until we get previous data?
 	},
 
 	_fetch: function () {
@@ -56,7 +57,7 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 		// Start a placeholder for content that we'll be fetching.
 		// Doing this now let's us set a loading message and keeps
 		// content in order as it comes back.
-		var wrapper = dojo.create("div", {class: 'dojoxInfiniteContentPane', innerHTML: 'Loading...'});
+		var wrapper = dojo.create("div", {class: 'dojoxInfiniteContentPane', innerHTML: '<p>Loading...</p>'});
 		dojo.place(wrapper, this.domNode, 'last');
 
 		// Start up a deferred objet to handle data when it comes
