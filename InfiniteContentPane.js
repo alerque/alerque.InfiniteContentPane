@@ -10,7 +10,7 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 	fetcher: null, // dojo.Deferred given us for returning the next content
 	triggerHeight: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
 	maxFetchers: 1, // How many threads to allow pending
-	loadingMsg: '<p>Loading...</p>'
+	loadingMsg: '<p>Loading...</p>',
 
 	_paneHeight: 0,
 	_scrollHeight: 0,
