@@ -10,12 +10,13 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 	fetcher: null, // dojo.Deferred given us for returning the next content
 	triggerHeight: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
 	maxFetchers: 1, // How many threads to allow pending
+	loadingMsg: '<p>Loading...</p>'
 
 	_paneHeight: 0,
 	_scrollHeight: 0,
 	_fetchCount: 0, // Iterator showing how many times we've expanded. Might be useful to return to our fetcher
-	_connect: null, // a handle for our on scroll event so we can shut it off the workings if we run out of data
 	_fetchersCount: 0,
+	_connect: null, // a handle for our on scroll event so we can shut it off the workings if we run out of data
 
 	postCreate: function () {
 		this._connect = this.connect(this.domNode, "onscroll", "_onScroll");
@@ -52,12 +53,16 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 	},
 
 	_fetch: function () {
+		// TODO: test that fetcher is a function? object? In any case don't bother if we don't have one
+		if (!this.fetcher) {
+			return this._disable();
+		}
 		this._fetchCount += 1;
 
 		// Start a placeholder for content that we'll be fetching.
 		// Doing this now let's us set a loading message and keeps
 		// content in order as it comes back.
-		var wrapper = dojo.create('div', {'class': 'dojoxInfiniteContentPane', 'innerHTML': '<p>Loading...</p>'});
+		var wrapper = dojo.create('div', {'class': 'dojoxInfiniteContentPane', 'innerHTML': this.loadingMsg});
 		dojo.place(wrapper, this.domNode, 'last');
 
 		// Start up a deferred objet to handle data when it comes
@@ -65,6 +70,7 @@ dojo.declare("dojox.layout.InfiniteContentPane",
 		var deferred = new dojo.Deferred();
 		this._fetchersCount++;
 		deferred.then(dojo.hitch(this, function(data) {
+			// TODO: Test xhr status instead? What if it's not an xhr?
 			// If we get nothing back, presume we've reached the end of the possible data
 			if (!data.length) {
 				return this._disable();
