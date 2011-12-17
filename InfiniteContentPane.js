@@ -1,25 +1,9 @@
 define([
-	"dojo/_base/kernel", // kernel.deprecated
-	"dojo/_base/lang", // lang.mixin lang.delegate lang.hitch lang.isFunction lang.isObject
-	"dijit/_Widget",
-	"dijit/layout/_ContentPaneResizeMixin",
-	"dojo/string", // string.substitute
-	"dojo/html", // html._ContentSetter html._emptyNode
-	"dojo/i18n!dijit/nls/loading",
-	"dojo/_base/array", // array.forEach
+	"dojo",
+	"dijit",
 	"dojo/_base/declare", // declare
-	"dojo/_base/Deferred", // Deferred
-	"dojo/dom", // dom.byId
-	"dojo/dom-attr", // domAttr.attr
-	"dojo/_base/window", // win.body win.doc.createDocumentFragment
-	"dojo/_base/xhr", // xhr.get
-	"dojo/i18n", // i18n.getLocalization
-	"dojo/parser",
 	"dijit/layout/ContentPane"
-], function(kernel, lang, _Widget, _ContentPaneResizeMixin, string, html, nlsLoading,
-	array, declare, Deferred, dom, domAttr, win, xhr, i18n){
-
-kernel.expermental("dojox.layout.InfiniteContentPane");
+], function(dojo, dijit, declare) {
 
 // module:
 //		dojox/layout/InfiniteContentPane
