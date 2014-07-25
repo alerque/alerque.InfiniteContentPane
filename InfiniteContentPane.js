@@ -2,7 +2,7 @@ define([
 	"dojo",
 	"dijit",
 	"dojo/_base/declare", // declare
-	"dijit/layout/ContentPane"
+  "dojox/layout/ContentPane",
 ], function(dojo, dijit, declare) {
 
 // module:
@@ -10,7 +10,7 @@ define([
 // summary:
 //		A layout widget for retrieving extra content on scroll event.
 
-return declare("dojox.layout.InfiniteContentPane", [dijit.layout.ContentPane], {
+return declare("dojox.layout.InfiniteContentPane", [dojox.layout.ContentPane], {
 	fetcher: null, // dojo.Deferred given us for returning the next content
 	triggerHeight: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
 	maxFetchers: 1, // How many threads to allow pending
@@ -29,7 +29,7 @@ return declare("dojox.layout.InfiniteContentPane", [dijit.layout.ContentPane], {
 
 		return this.inherited(arguments);
 	},
-	
+
 	resize: function() {
 		// if we got resized, recalculate our size and then simulate a scroll event
 		this._calc();
@@ -89,7 +89,7 @@ return declare("dojox.layout.InfiniteContentPane", [dijit.layout.ContentPane], {
 			// Update our knowledge about ourselves now that we stuffed new data
 			this._calc();
 			this._fetchersCount--;
-			
+
 			// TODO: reactivate scroll watcher if suspended above
 		}));
 
