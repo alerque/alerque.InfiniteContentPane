@@ -2,12 +2,13 @@ define([
 	"dojo",
 	"dijit",
   "dojo/on",
+  "dojo/Deferred",
   "dojo/dom-geometry",
   "dojo/parser",
   "dojox/layout/ContentPane",
 	"dojo/_base/declare",
 	"dojo/_base/lang"
-], function(dojo, dijit, on, domGeom, parser, ContentPane, declare, lang) {
+], function(dojo, dijit, on, Deferred, domGeom, parser, ContentPane, declare, lang) {
 
 // module:
 //		alerque/InfiniteContentPane
@@ -16,7 +17,8 @@ define([
 //		out of something to show.
 
 return declare("alerque.InfiniteContentPane", [ContentPane], {
-  // fetcher should be a dojo.Deferred object that can return data on command
+  // fetcher should be something we can pass to dojo.Deferred to wait for
+  // data to be returned
 	fetcher: null,
   // hot zone that triggers a fetch needs to be fixed height, percentages would
   // make it funky as more content gets loaded it would get too big
@@ -87,7 +89,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
 		// Start up a deferred objet to handle data when it comes
 		// back from our fetcher
-		var deferred = new dojo.Deferred();
+		var deferred = new Deferred();
 		this._fetchersCount++;
 		deferred.then(lang.hitch(this, function(data) {
 			// TODO: Test xhr status instead? What if it's not an xhr?
