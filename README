@@ -1,1 +1,0 @@
-And infinite scrolling content pane for the dojo toolkit insipired by but not copied from the jQeruy Infinite Scroll plugin: https://github.com/paulirish/infinite-scroll. Extends dijit.layout.ContentPane with scroll detection and callbacks for fetching, placing and parsing extended data. Uses user supplied function such as dojo.xhrGet for fetcher.
