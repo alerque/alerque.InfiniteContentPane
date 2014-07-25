@@ -1,16 +1,17 @@
 define([
 	"dojo",
 	"dijit",
-	"dojo/_base/declare", // declare
+  "dojo/on",
   "dojox/layout/ContentPane",
-], function(dojo, dijit, declare) {
+	"dojo/_base/declare",
+], function(dojo, dijit, on, ContentPane, declare) {
 
 // module:
 //		dojox/layout/InfiniteContentPane
 // summary:
 //		A layout widget for retrieving extra content on scroll event.
 
-return declare("alerque.InfiniteContentPane", [dojox.layout.ContentPane], {
+return declare("alerque.InfiniteContentPane", [ContentPane], {
 	fetcher: null, // dojo.Deferred given us for returning the next content
 	triggerHeight: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
 	maxFetchers: 1, // How many threads to allow pending
@@ -23,10 +24,8 @@ return declare("alerque.InfiniteContentPane", [dojox.layout.ContentPane], {
 	_connect: null, // a handle for our on scroll event so we can shut it off the workings if we run out of data
 
 	postCreate: function () {
-		this._connect = this.connect(this.domNode, "onscroll", "_onScroll");
-
+		this._connect = on(this.domNode, "scroll", this._onScroll);
 		this._calc();
-
 		return this.inherited(arguments);
 	},
 
