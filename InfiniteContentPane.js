@@ -3,10 +3,11 @@ define([
 	"dijit",
   "dojo/on",
   "dojo/dom-geometry",
+  "dojo/parser",
   "dojox/layout/ContentPane",
 	"dojo/_base/declare",
 	"dojo/_base/lang"
-], function(dojo, dijit, on, domGeom, ContentPane, declare, lang) {
+], function(dojo, dijit, on, domGeom, parser, ContentPane, declare, lang) {
 
 // module:
 //		alerque/InfiniteContentPane
@@ -99,7 +100,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 			wrapper.innerHTML = data;
 
 			if (this.parseOnLoad) {
-				dojo.parser.parse(wrapper);
+				parser.parse(wrapper);
 			}
 
 			// Update our knowledge about ourselves now that we stuffed new data
