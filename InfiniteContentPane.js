@@ -118,7 +118,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
 	_disable: function() {
 		// If we stop getting data, unwire the scroll event to save resources
-		dojo.disconnect(this._connect[0]);
+    this._connect.remove();
 	}
 
 });
