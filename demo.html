@@ -1,0 +1,63 @@
+<html>
+
+  <head>
+
+    <title>Infinite Scroll Demo</title>
+
+    <script>
+      var dojoConfig = {
+        async: true,
+        parseOnLoad: true,
+        packages: [{
+          name: "alerque",
+          location: location.pathname.replace(/\/[^/]*$/, '') + '/'
+        }]
+      };
+    </script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.0/dojo/dojo.js"></script>
+
+    <script>
+      require(["alerque/InfiniteContentPane"], function(InfiniteContentPane) {
+        console.log(InfiniteContentPane);
+      });
+    </script>
+
+    <style>
+      html, body {
+        box-sizing: border-box;
+        padding: 2em 4em;
+        background: #DDD;
+        width: 100%;
+        height: 100%;
+      }
+      div.infinite {
+        width: 100%;
+        height: 50%;
+        background: #FFF;
+        padding: 1em;
+        overflow-y: scroll;
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <h1>dojox.layout.InfiniteContentPane</h1>
+
+    <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
+      <p>test</p>
+      <p>test</p>
+      <p>test</p>
+      <p>test</p>
+      <p>test</p>
+      <p>test</p>
+      <p>test</p>
+      <p>test</p>
+      <p>test</p>
+    </div>
+
+  </body>
+
+</html>
