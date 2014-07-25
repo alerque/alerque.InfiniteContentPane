@@ -2,9 +2,10 @@ define([
 	"dojo",
 	"dijit",
   "dojo/on",
+  "dojo/dom-geometry",
   "dojox/layout/ContentPane",
 	"dojo/_base/declare",
-], function(dojo, dijit, on, ContentPane, declare) {
+], function(dojo, dijit, on, domGeom, ContentPane, declare) {
 
 // module:
 //		alerque/InfiniteContentPane
@@ -33,7 +34,9 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 	_connect: null,
 
 	postCreate: function () {
+    // Wire up scroll events to checking if we need more data
 		this._connect = on(this.domNode, "scroll", this._onScroll);
+    // Run a check on our data situation on instantiation
 		this._calc();
 		return this.inherited(arguments);
 	},
@@ -47,13 +50,12 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 	},
 
 	_calc: function () {
-		// TODO: do some match to make sure trigger zone is a reasonable size of
-    // pane?
-		this._paneHeight = dojo._getMarginSize(this.domNode).h;
+		// TODO: do some math to make sure trigger zone is a sane size of pane
+		this._paneHeight = domGeom.getMarginSize(this.domNode).h;
 		this._scrollHeight = this.domNode['scrollHeight'];
 	},
 
-	_onScroll: function (/* Event */e) {
+	_onScroll: function (event) {
 		// Find our current position
 		var bottomPos = this.domNode['scrollTop'] + this._paneHeight;
 
