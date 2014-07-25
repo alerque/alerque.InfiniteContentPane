@@ -5,7 +5,8 @@ define([
   "dojo/dom-geometry",
   "dojox/layout/ContentPane",
 	"dojo/_base/declare",
-], function(dojo, dijit, on, domGeom, ContentPane, declare) {
+	"dojo/_base/lang"
+], function(dojo, dijit, on, domGeom, ContentPane, declare, lang) {
 
 // module:
 //		alerque/InfiniteContentPane
@@ -35,7 +36,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
 	postCreate: function () {
     // Wire up scroll events to checking if we need more data
-		this._connect = on(this.domNode, "scroll", this._onScroll);
+		this._connect = on(this.domNode, "scroll", lang.hitch(this, '_onScroll'));
     // Run a check on our data situation on instantiation
 		this._calc();
 		return this.inherited(arguments);
@@ -43,7 +44,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
 	resize: function() {
 		// if we got resized, recalculate our size and then simulate a scroll event
-    // just te make sure we have the data we're supposted to
+    // just to make sure we have the data we're supposted to
 		this._calc();
 		this._onScroll();
 		return this.inherited(arguments);
@@ -87,7 +88,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		// back from our fetcher
 		var deferred = new dojo.Deferred();
 		this._fetchersCount++;
-		deferred.then(dojo.hitch(this, function(data) {
+		deferred.then(lang.hitch(this, function(data) {
 			// TODO: Test xhr status instead? What if it's not an xhr?
 			// If we get nothing back, presume we've reached the end of the
       // possible data
@@ -111,7 +112,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		// Wire up the the deferred handle we just made to a new instance
 		// of the fetcher we were given. The value should indicate whether
 		// there is a possibility of more data or not.
-		var ret = this.fetcher(dojo.hitch(this, deferred.callback),
+		var ret = this.fetcher(lang.hitch(this, deferred.callback),
                            this._fetcherCount);
 		if (ret === false) {
 			return this._disable();
