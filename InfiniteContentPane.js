@@ -26,7 +26,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 	_scrollHeight: 0,
   // Iterator showing how many times we've expanded. Might be useful to return
   // to our fetcher
-	_fetchCount: 0,
+	_fetcherCount: 0,
 	_fetchersCount: 0,
   // a handle for our on scroll event so we can shut it off the workings if we
   // run out of data
@@ -72,7 +72,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		if (!this.fetcher) {
 			return this._disable();
 		}
-		this._fetchCount += 1;
+		this._fetcherCount += 1;
 
 		// Start a placeholder for content that we'll be fetching.
 		// Doing this now let's us set a loading message and keeps
@@ -110,7 +110,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		// of the fetcher we were given. The value should indicate whether
 		// there is a possibility of more data or not.
 		var ret = this.fetcher(dojo.hitch(this, deferred.callback),
-                           this._fetchCount);
+                           this._fetcherCount);
 		if (ret === false) {
 			return this._disable();
 		}
