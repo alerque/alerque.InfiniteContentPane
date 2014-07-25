@@ -10,7 +10,7 @@ define([
 // summary:
 //		A layout widget for retrieving extra content on scroll event.
 
-return declare("dojox.layout.InfiniteContentPane", [dojox.layout.ContentPane], {
+return declare("alerque.InfiniteContentPane", [dojox.layout.ContentPane], {
 	fetcher: null, // dojo.Deferred given us for returning the next content
 	triggerHeight: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
 	maxFetchers: 1, // How many threads to allow pending
