@@ -7,21 +7,30 @@ define([
 ], function(dojo, dijit, on, ContentPane, declare) {
 
 // module:
-//		dojox/layout/InfiniteContentPane
+//		alerque/InfiniteContentPane
 // summary:
-//		A layout widget for retrieving extra content on scroll event.
+//		A layout widget for retrieving extra content on scroll so it never runs
+//		out of something to show.
 
 return declare("alerque.InfiniteContentPane", [ContentPane], {
-	fetcher: null, // dojo.Deferred given us for returning the next content
-	triggerHeight: 100, // hot zone that triggers a fetch needs to be fixed height, percentages would make it funky as more content gets loaded it would get too big
-	maxFetchers: 1, // How many threads to allow pending
+  // fetcher should be a dojo.Deferred object that can return data on command
+	fetcher: null,
+  // hot zone that triggers a fetch needs to be fixed height, percentages would
+  // make it funky as more content gets loaded it would get too big
+	triggerHeight: 100,
+  // How many threads to allow pending
+	maxFetchers: 1,
 	loadingMsg: '<p>Loading...</p>',
 
 	_paneHeight: 0,
 	_scrollHeight: 0,
-	_fetchCount: 0, // Iterator showing how many times we've expanded. Might be useful to return to our fetcher
+  // Iterator showing how many times we've expanded. Might be useful to return
+  // to our fetcher
+	_fetchCount: 0,
 	_fetchersCount: 0,
-	_connect: null, // a handle for our on scroll event so we can shut it off the workings if we run out of data
+  // a handle for our on scroll event so we can shut it off the workings if we
+  // run out of data
+	_connect: null,
 
 	postCreate: function () {
 		this._connect = on(this.domNode, "scroll", this._onScroll);
@@ -31,13 +40,15 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
 	resize: function() {
 		// if we got resized, recalculate our size and then simulate a scroll event
+    // just te make sure we have the data we're supposted to
 		this._calc();
 		this._onScroll();
 		return this.inherited(arguments);
 	},
 
 	_calc: function () {
-		// TODO: do some match to make sure trigger zone is a reasonable size of pane?
+		// TODO: do some match to make sure trigger zone is a reasonable size of
+    // pane?
 		this._paneHeight = dojo._getMarginSize(this.domNode).h;
 		this._scrollHeight = this.domNode['scrollHeight'];
 	},
@@ -56,7 +67,8 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 	},
 
 	_fetch: function () {
-		// TODO: test that fetcher is a function? object? In any case don't bother if we don't have one
+		// TODO: test that fetcher is a function? object? In any case don't bother
+    // if we don't have one
 		if (!this.fetcher) {
 			return this._disable();
 		}
@@ -65,7 +77,8 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		// Start a placeholder for content that we'll be fetching.
 		// Doing this now let's us set a loading message and keeps
 		// content in order as it comes back.
-		var wrapper = dojo.create('div', {'class': 'dojoxInfiniteContentPane', 'innerHTML': this.loadingMsg});
+		var wrapper = dojo.create('div',
+      {'class': 'dojoxInfiniteContentPane', 'innerHTML': this.loadingMsg});
 		dojo.place(wrapper, this.domNode, 'last');
 
 		// Start up a deferred objet to handle data when it comes
@@ -74,7 +87,8 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		this._fetchersCount++;
 		deferred.then(dojo.hitch(this, function(data) {
 			// TODO: Test xhr status instead? What if it's not an xhr?
-			// If we get nothing back, presume we've reached the end of the possible data
+			// If we get nothing back, presume we've reached the end of the
+      // possible data
 			if (!data.length) {
 				return this._disable();
 			}
@@ -95,7 +109,8 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		// Wire up the the deferred handle we just made to a new instance
 		// of the fetcher we were given. The value should indicate whether
 		// there is a possibility of more data or not.
-		var ret = this.fetcher(dojo.hitch(this, deferred.callback), this._fetchCount);
+		var ret = this.fetcher(dojo.hitch(this, deferred.callback),
+                           this._fetchCount);
 		if (ret === false) {
 			return this._disable();
 		}
