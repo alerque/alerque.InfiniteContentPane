@@ -94,7 +94,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
 		this._fetchersCount++;
 
-    // Instanciate a new fetcher
+    // Instantiate a new fetcher
     var fetcher = this._runFetcher(this.fetcher, wrapper, this._fetcherCount);
 
     fetcher.then(lang.hitch(this, function(result) {

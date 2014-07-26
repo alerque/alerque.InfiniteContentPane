@@ -24,6 +24,11 @@
     // is not in the CDN version, so load it up now
     require(["alerque/InfiniteContentPane"], function(InfiniteContentPane) {
     });
+
+    // Sample programatic method to supply data
+    var demoData = function(count) {
+      return "<p>More data from an external loader run count " + count + "</p>";
+    };
   </script>
 
   <style>
@@ -66,32 +71,36 @@
   <h1>alerque.InfiniteContentPane</h1>
 
   <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
-    <script type="dojo/aspect" data-dojo-method="fetcher" data-dojo-args="count">
-      return "<p>This is more data count " + count + "</p>";
+    <script type="dojo/aspect" data-dojo-method="fetcher">
+      return "<p>This is more data.</p>";
     </script>
     <h2>Test 1</h2>
-    <p>The simplest setup possible, simply calls a function that returns data.
-    with otherwise default settings.</p>
+    <p>The simplest setup possible. Use declarative markup to define setup the
+      fetcher method that just returns more data. Default settings across the
+      board.</p>
     <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
   </div>
 
   <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
+    <script type="dojo/aspect" data-dojo-method="fetcher" data-dojo-args="count">
+      var data = "<p>This is more data count " + count + "</p>";
+      return (count <= 20) ? data : '';
+    </script>
     <h2>Test 2</h2>
-    <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
+    <p>This is a littly more advanced. Still using declarative markup we define
+      a fetcher function, but this time we check on how many times we've been
+      called and stop returning data (thereby deactivating the widget) after
+      20 loads.</p>
     <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
   </div>
 
-  <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
+  <div class="infinite"
+    data-dojo-type="alerque/InfiniteContentPane"
+    data-dojo-props="fetcher: demoData">
     <h2>Test 3</h2>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
+    <p>This one uses an predefined function to load data. This could be adapted
+      to handle the case of an xhr request, etc.</p>
+    <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
   </div>
 
 </body>
