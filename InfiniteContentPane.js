@@ -86,34 +86,55 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		// Start a placeholder for content that we'll be fetching. Doing this early
     // lets us set a loading message and keeps content in order even if async
     // fetchers come back out of order.
-		var wrapper = dojo.create('div',
-      {'class': 'alerque-infinite-content', 'innerHTML': this.loadingMsg});
+		var wrapper = domConstruct.create('div', {
+      'class': 'alerque-infinite-content',
+      'innerHTML': this.loadingMsg
+    });
 		domConstruct.place(wrapper, this.domNode, 'last');
+
+		this._fetchersCount++;
 
 		// Start up a deferred objet to handle data when it comes
 		// back from our fetcher
-		var deferred = new Deferred();
-		this._fetchersCount++;
-		deferred.then(lang.hitch(this, function(data) {
-			// TODO: Test xhr status instead? What if it's not an xhr?
+    function runFetcher(fetcher, count) {
+      var deferred = new Deferred();
 
+      var content = fetcher(count);
+      html.set(wrapper, content);
+      
 			// If we get nothing back presume we've reached the end of the data
-			if (!data.length) {
-				return this._disable();
+			if (!content.length) {
+        deferred.reject();
 			}
 
-      html.set(wrapper, content);
+      setTimeout(function() {
+        deferred.resolve("success");
+      }, 100);
 
+      return deferred.promise;
+    }
+
+    var fetcher = runFetcher(this.fetcher, this._fetcherCount);
+
+    fetcher.then(lang.hitch(this, function(result) {
+      // Scan for dojo declarative markup in new content
 			if (this.parseOnLoad) {
 				parser.parse(wrapper);
 			}
-
+      
 			// Update our knowledge about ourselves now that we stuffed new data
 			this._calc();
 			this._fetchersCount--;
 
+    }), lang.hitch(this, function(err){
+      // If the fetcher is rejecting our request, unwire it from out widget
+      return this._disable();
+    }));
+    return;
+
+
+
 			// TODO: reactivate scroll watcher if suspended above
-		}));
 
 		// Wire up the the deferred handle we just made to a new instance
 		// of the fetcher we were given. The value should indicate whether

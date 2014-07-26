@@ -24,11 +24,6 @@
     // is not in the CDN version, so load it up now
     require(["alerque/InfiniteContentPane"], function(InfiniteContentPane) {
     });
-
-    // Demo function to return more data
-    var loadMore = function() {
-      return "<p>more...</p>";
-    }
   </script>
 
   <style>
@@ -60,6 +55,9 @@
     .infinite p {
       margin-bottom: 5em;
     }
+    .alerque-infinite-content {
+      background: yellow;
+    }
   </style>
 
 </head>
@@ -67,33 +65,20 @@
 
   <h1>alerque.InfiniteContentPane</h1>
 
-  <div class="infinite"
-    data-dojo-type="alerque/InfiniteContentPane"
-    data-dojo-props="fetcher: loadMore"
-    >
+  <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
+    <script type="dojo/aspect" data-dojo-method="fetcher" data-dojo-args="count">
+      return "<p>This is more data count " + count + "</p>";
+    </script>
     <h2>Test 1</h2>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
+    <p>The simplest setup possible, simply calls a function that returns data.
+    with otherwise default settings.</p>
+    <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
   </div>
 
   <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
     <h2>Test 2</h2>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
-    <p>test</p>
+    <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
+    <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
   </div>
 
   <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
