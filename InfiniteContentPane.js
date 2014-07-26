@@ -5,11 +5,13 @@ define([
   "dojo/Deferred",
   "dojo/dom-construct",
   "dojo/dom-geometry",
+  "dojo/html",
   "dojo/parser",
   "dojox/layout/ContentPane",
 	"dojo/_base/declare",
 	"dojo/_base/lang"
-], function(dojo, dijit, on, Deferred, domConstruct, domGeom, parser, ContentPane, declare, lang) {
+], function(dojo, dijit, on, Deferred, domConstruct, domGeom, html, parser,
+            ContentPane, declare, lang) {
 
 // module:
 //		alerque/InfiniteContentPane
@@ -94,13 +96,13 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		this._fetchersCount++;
 		deferred.then(lang.hitch(this, function(data) {
 			// TODO: Test xhr status instead? What if it's not an xhr?
-			// If we get nothing back, presume we've reached the end of the
-      // possible data
+
+			// If we get nothing back presume we've reached the end of the data
 			if (!data.length) {
 				return this._disable();
 			}
 
-			wrapper.innerHTML = data;
+      html.set(wrapper, content);
 
 			if (this.parseOnLoad) {
 				parser.parse(wrapper);
