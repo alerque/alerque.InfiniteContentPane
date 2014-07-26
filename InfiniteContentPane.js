@@ -94,57 +94,45 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
 		this._fetchersCount++;
 
-		// Start up a deferred objet to handle data when it comes
-		// back from our fetcher
-    function runFetcher(fetcher, count) {
-      var deferred = new Deferred();
-
-      var content = fetcher(count);
-      html.set(wrapper, content);
-      
-			// If we get nothing back presume we've reached the end of the data
-			if (!content.length) {
-        deferred.reject();
-			}
-
-      setTimeout(function() {
-        deferred.resolve("success");
-      }, 100);
-
-      return deferred.promise;
-    }
-
-    var fetcher = runFetcher(this.fetcher, this._fetcherCount);
+    // Instanciate a new fetcher
+    var fetcher = this._runFetcher(this.fetcher, wrapper, this._fetcherCount);
 
     fetcher.then(lang.hitch(this, function(result) {
       // Scan for dojo declarative markup in new content
 			if (this.parseOnLoad) {
 				parser.parse(wrapper);
 			}
-      
 			// Update our knowledge about ourselves now that we stuffed new data
 			this._calc();
 			this._fetchersCount--;
-
     }), lang.hitch(this, function(err){
       // If the fetcher is rejecting our request, unwire it from out widget
       return this._disable();
     }));
-    return;
-
-
-
-			// TODO: reactivate scroll watcher if suspended above
-
-		// Wire up the the deferred handle we just made to a new instance
-		// of the fetcher we were given. The value should indicate whether
-		// there is a possibility of more data or not.
-		var ret = this.fetcher(lang.hitch(this, deferred.callback),
-                           this._fetcherCount);
-		if (ret === false) {
-			return this._disable();
-		}
 	},
+
+  // Wrap the user supplied content generator funtion in a deferred object to
+  // make it an async source no matter where the data is coming from
+  _runFetcher: function(fetcher, wrapper, count) {
+    var deferred = new Deferred();
+
+    // Get content from the user supplied method
+    var content = fetcher(count);
+
+    // Load the content into the wrapper we already allocated
+    html.set(wrapper, content);
+    
+    // If we get nothing back presume we've reached the end of the data
+    if (!content.length) {
+      deferred.reject();
+    }
+
+    // Let the pane know this data came back and it can try again form more
+    // when it runs out
+    deferred.resolve("success");
+
+    return deferred.promise;
+  },
 
 	_disable: function() {
 		// If we stop getting data, unwire the scroll event to save resources
