@@ -3,12 +3,13 @@ define([
 	"dijit",
   "dojo/on",
   "dojo/Deferred",
+  "dojo/dom-construct",
   "dojo/dom-geometry",
   "dojo/parser",
   "dojox/layout/ContentPane",
 	"dojo/_base/declare",
 	"dojo/_base/lang"
-], function(dojo, dijit, on, Deferred, domGeom, parser, ContentPane, declare, lang) {
+], function(dojo, dijit, on, Deferred, domConstruct, domGeom, parser, ContentPane, declare, lang) {
 
 // module:
 //		alerque/InfiniteContentPane
@@ -80,12 +81,12 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		}
 		this._fetcherCount += 1;
 
-		// Start a placeholder for content that we'll be fetching.
-		// Doing this now let's us set a loading message and keeps
-		// content in order as it comes back.
+		// Start a placeholder for content that we'll be fetching. Doing this early
+    // lets us set a loading message and keeps content in order even if async
+    // fetchers come back out of order.
 		var wrapper = dojo.create('div',
-      {'class': 'dojoxInfiniteContentPane', 'innerHTML': this.loadingMsg});
-		dojo.place(wrapper, this.domNode, 'last');
+      {'class': 'alerque-infinite-content', 'innerHTML': this.loadingMsg});
+		domConstruct.place(wrapper, this.domNode, 'last');
 
 		// Start up a deferred objet to handle data when it comes
 		// back from our fetcher

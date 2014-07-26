@@ -20,9 +20,15 @@
   </script>
 
   <script>
+    // Parser doesn't find widgets unless they are defined, which of course it
+    // is not in the CDN version, so load it up now
     require(["alerque/InfiniteContentPane"], function(InfiniteContentPane) {
-      console.log(InfiniteContentPane);
     });
+
+    // Demo function to return more data
+    var loadMore = function() {
+      return "<p>more...</p>";
+    }
   </script>
 
   <style>
@@ -61,7 +67,10 @@
 
   <h1>alerque.InfiniteContentPane</h1>
 
-  <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
+  <div class="infinite"
+    data-dojo-type="alerque/InfiniteContentPane"
+    data-dojo-props="fetcher: loadMore"
+    >
     <h2>Test 1</h2>
     <p>test</p>
     <p>test</p>
