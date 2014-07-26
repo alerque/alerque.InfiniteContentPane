@@ -24,6 +24,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
   // how many pending fetcher threads to allow
 	maxFetchers: 1,
 	loadingMsg: '<p>Loading...</p>',
+  enableUp: false,
 
 	_paneHeight: 0,
 	_scrollHeight: 0,
@@ -34,6 +35,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
   // a handle for our on scroll event so we can shut it off the workings if we
   // run out of data
 	_connect: null,
+  _heightMark: 0,
 
 	postCreate: function () {
     // Wire up scroll events to checking if we need more data
@@ -66,12 +68,18 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		if (bottomPos > (this._scrollHeight - this.triggerHeight)) {
 			// As long as we aren't waiting on too much already, go fetch data
 			if (this._fetchersCount < this.maxFetchers) {
-				this._fetch();
+				this._fetch(false);
 			}
 		}
+
+    if (this.enableUp) {
+      if (this.domNode['scrollTop'] < this.triggerHeight) {
+        this._fetch(true);
+      }
+    }
 	},
 
-	_fetch: function () {
+	_fetch: function (isUp) {
 		// TODO: test that fetcher is a function? object? In any case don't bother
     // if we don't have one
 		if (!this.fetcher) {
@@ -86,12 +94,14 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
       'class': 'alerque-infinite-content',
       'innerHTML': this.loadingMsg
     });
-		domConstruct.place(wrapper, this.domNode, 'last');
+    if (isUp) { this._markScroll(); }
+		domConstruct.place(wrapper, this.domNode, isUp ? 'first' : 'last');
+    if (isUp) { this._resetScroll(); }
 
 		this._fetchersCount++;
 
     // Instantiate a new fetcher
-    var fetcher = this._runFetcher(this.fetcher, wrapper, this._fetcherCount);
+    var fetcher = this._runFetcher(this.fetcher, wrapper, this._fetcherCount, isUp);
 
     fetcher.then(lang.hitch(this, function(result) {
       // Scan for dojo declarative markup in new content
@@ -109,15 +119,16 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
   // Wrap the user supplied content generator funtion in a deferred object to
   // make it an async source no matter where the data is coming from
-  _runFetcher: function(fetcher, wrapper, count) {
+  _runFetcher: function(fetcher, wrapper, count, isUp) {
     var deferred = new Deferred();
 
     // Get content from the user supplied method
-    var content = fetcher(count);
+    var content = fetcher(count, isUp);
 
-    // Load the content into the wrapper we already allocated
+    if (isUp) { this._markScroll(); }
     html.set(wrapper, content);
-    
+    if (isUp) { this._resetScroll(); }
+
     // If we get nothing back presume we've reached the end of the data
     if (!content.length) {
       deferred.reject();
@@ -128,6 +139,15 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
     deferred.resolve("success");
 
     return deferred.promise;
+  },
+  
+  _markScroll: function() {
+    this._heightMark = this.domNode['scrollHeight'];
+  },
+
+  _resetScroll: function() {
+      var contentHeightChange = this.domNode['scrollHeight'] - this._heightMark;
+      this.domNode['scrollTop'] += contentHeightChange;
   },
 
 	_disable: function() {

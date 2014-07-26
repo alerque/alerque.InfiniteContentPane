@@ -73,7 +73,8 @@
 
   <div class="infinite"
     data-dojo-type="alerque/InfiniteContentPane" >
-    <script type="dojo/method" data-dojo-event="fetcher">
+    <script type="dojo/method"
+      data-dojo-event="fetcher">
       console.log("Ran fetch for test 1");
       return "<p>This is more data.</p>";
     </script>
@@ -87,9 +88,11 @@
 
   <div class="infinite"
     data-dojo-type="alerque/InfiniteContentPane"
-    data-dojo-props="triggerHeight: 1">
-    <script type="dojo/method" data-dojo-event="fetcher" data-dojo-args="count">
-      console.log("Ran fetch for test 2");
+    data-dojo-props="triggerHeight: 10, enableUp: true">
+    <script type="dojo/method"
+      data-dojo-event="fetcher"
+      data-dojo-args="count, isUp">
+      console.log("Ran fetch for test 2; up:", isUp);
       var data = "<p>This is more data count " + count + "</p>";
       return (count <= 20) ? data : '';
     </script>
@@ -98,7 +101,7 @@
       a fetcher function, but this time we check on how many times we've been
       called and stop returning data (thereby deactivating the widget) after
       20 loads. Thi trigger zone is just 1 pixel so it won's load until you
-      actually hit the bottom of the pane.</p>
+      actually hit the bottom of the pane. Also the "up" direction is enabled.</p>
     <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
     <p style="height: 100%">&nbsp;</p>
   </div>
