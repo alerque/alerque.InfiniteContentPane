@@ -31,7 +31,7 @@
 		dojo.require("dijit.form.Button"); // Used to test child widgets
 		dojo.require("dijit.form.ComboBox"); // Used in test content
 		dojo.require("dijit.form.TextBox"); // Used in test content
-		dojo.require("dojox.layout.InfiniteContentPane"); 
+		dojo.require("alerque.InfiniteContentPane");
 
 		dojo.addOnLoad(function(){
 			dojo.parser.parse();
@@ -64,18 +64,18 @@
 </head>
 <body class="claro">
 		
-		<h1 class="testTitle">dojox.layout.InfiniteContentPane</h1>
+		<h1 class="testTitle">alerque.InfiniteContentPane</h1>
 		<p>
 			Continuous scroll layout pane that fires a event to fetch more data when aproaching either end.
 		</p>
 
-		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: fetch_more, triggerHeight: 500">
+		<div class="testpane" data-dojo-type="alerque.InfiniteContentPane" data-dojo-props="fetcher: fetch_more, triggerHeight: 500">
 			<p>Returns data loaded using an xhrGet. Returns infinitely. <input data-dojo-type="dijit.form.Button" data-dojo-props="label: 'Test button'" /></p>
 			<p>Tigger zone here is big enough to trigger a load on first touching the scroll bar and probably load more than one set of content right away.</p>
 			<p>Starter content.</p>
 		</div>
 
-		<div class="testpane" data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props="fetcher: return_more, triggerHeight: 1">
+		<div class="testpane" data-dojo-type="alerque.InfiniteContentPane" data-dojo-props="fetcher: return_more, triggerHeight: 1">
 			<p>Returns data generated in the test javascript. Will disable after ten hits.</p>
 			<p>Trigger zone is 1px, will only load when you hit the very end.</p>
 			<p>Starter content.</p>
@@ -83,7 +83,7 @@
 
 		<div class="testpane" data-dojo-type="dijit.layout.BorderContainer">
 			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"top", splitter:true'>Resize me</div>
-			<div data-dojo-type="dojox.layout.InfiniteContentPane" data-dojo-props='fetcher: delay_more, maxFetchers: 10, region: "center"'>
+			<div data-dojo-type="alerque.InfiniteContentPane" data-dojo-props='fetcher: delay_more, maxFetchers: 10, region: "center"'>
 				<p>Returns generated data, but on a timeout so it's late</p>
 				<p>Demonstrates that content is shown in order even when returned at various odd times.</p>
 				<p>Starter content.</p>
