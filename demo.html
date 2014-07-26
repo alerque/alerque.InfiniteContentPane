@@ -71,8 +71,9 @@
 
   <h1>alerque.InfiniteContentPane</h1>
 
-  <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
-    <script type="dojo/aspect" data-dojo-method="fetcher">
+  <div class="infinite"
+    data-dojo-type="alerque/InfiniteContentPane" >
+    <script type="dojo/method" data-dojo-event="fetcher">
       console.log("Ran fetch for test 1");
       return "<p>This is more data.</p>";
     </script>
@@ -84,9 +85,10 @@
     <p style="height: 100%">&nbsp;</p>
   </div>
 
-  <div class="infinite" data-dojo-type="alerque/InfiniteContentPane"
-    data-dojo-props="triggerHeight: 500">
-    <script type="dojo/aspect" data-dojo-method="fetcher" data-dojo-args="count">
+  <div class="infinite"
+    data-dojo-type="alerque/InfiniteContentPane"
+    data-dojo-props="triggerHeight: 1">
+    <script type="dojo/method" data-dojo-event="fetcher" data-dojo-args="count">
       console.log("Ran fetch for test 2");
       var data = "<p>This is more data count " + count + "</p>";
       return (count <= 20) ? data : '';
@@ -95,18 +97,20 @@
     <p>This is a littly more advanced. Still using declarative markup we define
       a fetcher function, but this time we check on how many times we've been
       called and stop returning data (thereby deactivating the widget) after
-      20 loads. The trigger height has been increased so it will load well
-      before you reach the end of the content.</p>
+      20 loads. Thi trigger zone is just 1 pixel so it won's load until you
+      actually hit the bottom of the pane.</p>
     <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
     <p style="height: 100%">&nbsp;</p>
   </div>
 
   <div class="infinite"
     data-dojo-type="alerque/InfiniteContentPane"
-    data-dojo-props="fetcher: demoData, triggerHeight: 1">
+    data-dojo-props="fetcher: demoData, triggerHeight: 1000">
     <h2>Test 3</h2>
-    <p>This one uses an predefined function to load data. This could be adapted
-      to handle the case of an xhr request, etc.</p>
+    <p>This one uses an programatic function to load data. This could easily be
+      adapted to handle the case of an xhr request, etc. The trigger height
+      has been increased so it will load well before you reach the end of the
+      content. In fact it will probably run on first page load.</p>
     <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
     <p style="height: 100%">&nbsp;</p>
   </div>

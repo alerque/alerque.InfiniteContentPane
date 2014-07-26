@@ -14,8 +14,8 @@ define([
   "dojo/on",
   "dojo/parser",
   "dojox/layout/ContentPane",
-], function(declare, lang, Deferred, domConstruct, domGeom, html, on, parser,
-            ContentPane) {
+], function(declare, lang, Deferred, domConstruct, domGeometry, html, on,
+            parser, ContentPane) {
 return declare("alerque.InfiniteContentPane", [ContentPane], {
   // a user supplied function of some kind that returns data
 	fetcher: null,
@@ -40,6 +40,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		this._connect = on(this.domNode, "scroll", lang.hitch(this, '_onScroll'));
     // Run a check on our data situation on instantiation
 		this._calc();
+    this._onScroll();
 		return this.inherited(arguments);
 	},
 
@@ -51,9 +52,9 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 		return this.inherited(arguments);
 	},
 
-	_calc: function () {
+  _calc: function () {
 		// TODO: do some math to make sure trigger zone is a sane size of pane
-		this._paneHeight = domGeom.getMarginSize(this.domNode).h;
+		this._paneHeight = domGeometry.position(this.domNode).h;
 		this._scrollHeight = this.domNode['scrollHeight'];
 	},
 
