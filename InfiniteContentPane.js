@@ -5,18 +5,18 @@
 //    out of something to show.
 
 define([
-  "dojo/_base/declare",
-  "dojo/_base/lang",
-  "dojo/Deferred",
-  "dojo/dom-construct",
-  "dojo/dom-geometry",
-  "dojo/html",
-  "dojo/on",
-  "dojo/parser",
-  "dojox/layout/ContentPane"
+  'dojo/_base/declare',
+  'dojo/_base/lang',
+  'dojo/Deferred',
+  'dojo/dom-construct',
+  'dojo/dom-geometry',
+  'dojo/html',
+  'dojo/on',
+  'dojo/parser',
+  'dojox/layout/ContentPane'
 ], function(declare, lang, Deferred, domConstruct, domGeometry, html, on,
             parser, ContentPane) {
-return declare("alerque.InfiniteContentPane", [ContentPane], {
+return declare('alerque.InfiniteContentPane', [ContentPane], {
   // a user supplied function of some kind that returns data
   fetcher: null,
   // hot zone that triggers a fetch, fixed height in pixels
@@ -37,9 +37,9 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
   _connect: null,
   _heightMark: 0,
 
-  postCreate: function () {
+  postCreate: function() {
     // Wire up scroll events to checking if we need more data
-    this._connect = on(this.domNode, "scroll", lang.hitch(this, '_onScroll'));
+    this._connect = on(this.domNode, 'scroll', lang.hitch(this, '_onScroll'));
     // Run a check on our data situation on instantiation
     this._calc();
     this._onScroll();
@@ -54,13 +54,13 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
     return this.inherited(arguments);
   },
 
-  _calc: function () {
+  _calc: function() {
     // TODO: do some math to make sure trigger zone is a sane size of pane
     this._paneHeight = domGeometry.position(this.domNode).h;
     this._scrollHeight = this.domNode['scrollHeight'];
   },
 
-  _onScroll: function (event) {
+  _onScroll: function(event) {
     // Find our current position
     var bottomPos = this.domNode['scrollTop'] + this._paneHeight;
 
@@ -79,7 +79,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
     }
   },
 
-  _fetch: function (isUp) {
+  _fetch: function(isUp) {
     // TODO: test that fetcher is a function? object? In any case don't bother
     // if we don't have one
     if (!this.fetcher) {
@@ -98,7 +98,8 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
 
     // Instantiate a new fetcher
-    var fetcher = this._runFetcher(this.fetcher, wrapper, this._fetcherCount, isUp);
+    var fetcher =
+      this._runFetcher(this.fetcher, wrapper, this._fetcherCount, isUp);
     this._fetchersCount++;
 
     fetcher.then(lang.hitch(this, function(result) {
@@ -109,7 +110,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
       // Update our knowledge about ourselves now that we stuffed new data
       this._calc();
       this._fetchersCount--;
-    }), lang.hitch(this, function(err){
+    }), lang.hitch(this, function(err) {
       // If the fetcher is rejecting our request, unwire it from out widget
       return this._disable();
     }));
@@ -131,7 +132,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
     // Let the pane know this data came back and it can try again form more
     // when it runs out
-    deferred.resolve("success");
+    deferred.resolve('success');
 
     return deferred.promise;
   },
