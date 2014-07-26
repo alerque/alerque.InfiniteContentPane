@@ -79,9 +79,9 @@
       return "<p>This is more data.</p>";
     </script>
     <h2>Test 1</h2>
-    <p>The simplest setup possible. Use declarative markup to define setup the
-      fetcher method that just returns more data. Default settings across the
-      board.</p>
+    <p>A very simple use case using declarative markup to define the fetcher
+      method. The method simple returns some content. All settings are at
+      default values.</p>
     <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
     <p style="height: 100%">&nbsp;</p>
   </div>
@@ -97,11 +97,13 @@
       return (count <= 20) ? data : '';
     </script>
     <h2>Test 2</h2>
-    <p>This is a littly more advanced. Still using declarative markup we define
-      a fetcher function, but this time we check on how many times we've been
-      called and stop returning data (thereby deactivating the widget) after
-      20 loads. Thi trigger zone is just 1 pixel so it won's load until you
-      actually hit the bottom of the pane. Also the "up" direction is enabled.</p>
+    <p>This pane scrolls both up and down. Like #1 it uses declarative markup
+      no define the fetcher method, but this time it looks at the arguments that
+      are passed in. This way it knows whether it is going up or down and also
+      how many times data has been fetched. After 20 it will return a blank
+      string to let the widget know not to try to lead anything else. The
+      trigger zone has also been reduced so it will not load new content until
+      you actually hit the end of the pane.</p>
     <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
     <p style="height: 100%">&nbsp;</p>
   </div>
@@ -110,7 +112,7 @@
     data-dojo-type="alerque/InfiniteContentPane"
     data-dojo-props="fetcher: demoData, triggerHeight: 1000">
     <h2>Test 3</h2>
-    <p>This one uses an programatic function to load data. This could easily be
+    <p>This one uses a programatic function to load data. This could easily be
       adapted to handle the case of an xhr request, etc. The trigger height
       has been increased so it will load well before you reach the end of the
       content. In fact it will probably run on first page load.</p>
