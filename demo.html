@@ -1,63 +1,104 @@
 <html>
+<head>
 
-  <head>
+  <title>Infinite Scroll Demo</title>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
-    <title>Infinite Scroll Demo</title>
+  <script>
+    var dojoConfig = {
+      async: true,
+      parseOnLoad: true,
+      isDebug: true,
+      packages: [{
+        name: "alerque",
+        location: location.pathname.replace(/\/[^/]*$/, '') + '/'
+      }]
+    };
+  </script>
 
-    <script>
-      var dojoConfig = {
-        async: true,
-        parseOnLoad: true,
-        packages: [{
-          name: "alerque",
-          location: location.pathname.replace(/\/[^/]*$/, '') + '/'
-        }]
-      };
-    </script>
+  <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.0/dojo/dojo.js">
+  </script>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.0/dojo/dojo.js"></script>
+  <script>
+    require(["alerque/InfiniteContentPane"], function(InfiniteContentPane) {
+      console.log(InfiniteContentPane);
+    });
+  </script>
 
-    <script>
-      require(["alerque/InfiniteContentPane"], function(InfiniteContentPane) {
-        console.log(InfiniteContentPane);
-      });
-    </script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      padding: 1em 2em;
+      background: #DDD;
+      width: 100%;
+      height: 100%;
+    }
+    h1 {
+      line-height: 2em;
+      font-size: 2em;
+    }
+    .infinite {
+      display: inline-block;
+      width: calc(33.33% - 1em);
+      height: calc(100% - 6em);
+      background: #FFF;
+      margin: 0;
+      padding: 1em;
+      overflow-y: scroll;
+    }
+    .infinite + infinite {
+      margin-right: 1em;
+    }
+    .infinite p {
+      margin-bottom: 5em;
+    }
+  </style>
 
-    <style>
-      html, body {
-        box-sizing: border-box;
-        padding: 2em 4em;
-        background: #DDD;
-        width: 100%;
-        height: 100%;
-      }
-      div.infinite {
-        width: 100%;
-        height: 50%;
-        background: #FFF;
-        padding: 1em;
-        overflow-y: scroll;
-      }
-    </style>
+</head>
+<body>
 
-  </head>
+  <h1>alerque.InfiniteContentPane</h1>
 
-  <body>
+  <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
+    <h2>Test 1</h2>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+  </div>
 
-    <h1>dojox.layout.InfiniteContentPane</h1>
+  <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
+    <h2>Test 2</h2>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+  </div>
 
-    <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
-      <p>test</p>
-      <p>test</p>
-      <p>test</p>
-      <p>test</p>
-      <p>test</p>
-      <p>test</p>
-      <p>test</p>
-      <p>test</p>
-      <p>test</p>
-    </div>
+  <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
+    <h2>Test 3</h2>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+  </div>
 
-  </body>
-
+</body>
 </html>
