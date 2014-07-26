@@ -1,30 +1,27 @@
-define([
-  "dojo/on",
-  "dojo/Deferred",
-  "dojo/dom-construct",
-  "dojo/dom-geometry",
-  "dojo/html",
-  "dojo/parser",
-  "dojox/layout/ContentPane",
-	"dojo/_base/declare",
-	"dojo/_base/lang"
-], function(on, Deferred, domConstruct, domGeom, html, parser,
-            ContentPane, declare, lang) {
-
 // module:
 //		alerque/InfiniteContentPane
 // summary:
 //		A layout widget for retrieving extra content on scroll so it never runs
 //		out of something to show.
 
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+  "dojo/Deferred",
+  "dojo/dom-construct",
+  "dojo/dom-geometry",
+  "dojo/html",
+  "dojo/on",
+  "dojo/parser",
+  "dojox/layout/ContentPane",
+], function(declare, lang, Deferred, domConstruct, domGeom, html, on, parser,
+            ContentPane) {
 return declare("alerque.InfiniteContentPane", [ContentPane], {
-  // fetcher should be something we can pass to dojo.Deferred to wait for
-  // data to be returned
+  // a user supplied function of some kind that returns data
 	fetcher: null,
-  // hot zone that triggers a fetch needs to be fixed height, percentages would
-  // make it funky as more content gets loaded it would get too big
+  // hot zone that triggers a fetch, fixed height in pixels
 	triggerHeight: 100,
-  // How many threads to allow pending
+  // how many pending fetcher threads to allow
 	maxFetchers: 1,
 	loadingMsg: '<p>Loading...</p>',
 
