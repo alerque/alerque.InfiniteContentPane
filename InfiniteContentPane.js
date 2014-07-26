@@ -1,6 +1,4 @@
 define([
-	"dojo",
-	"dijit",
   "dojo/on",
   "dojo/Deferred",
   "dojo/dom-construct",
@@ -10,7 +8,7 @@ define([
   "dojox/layout/ContentPane",
 	"dojo/_base/declare",
 	"dojo/_base/lang"
-], function(dojo, dijit, on, Deferred, domConstruct, domGeom, html, parser,
+], function(on, Deferred, domConstruct, domGeom, html, parser,
             ContentPane, declare, lang) {
 
 // module:
