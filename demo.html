@@ -27,6 +27,7 @@
 
     // Sample programatic method to supply data
     var demoData = function(count) {
+      console.log("Ran fetch for test 3");
       return "<p>More data from an external loader run count " + count + "</p>";
     };
   </script>
@@ -72,17 +73,21 @@
 
   <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
     <script type="dojo/aspect" data-dojo-method="fetcher">
+      console.log("Ran fetch for test 1");
       return "<p>This is more data.</p>";
     </script>
     <h2>Test 1</h2>
     <p>The simplest setup possible. Use declarative markup to define setup the
       fetcher method that just returns more data. Default settings across the
       board.</p>
-    <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
+    <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
+    <p style="height: 100%">&nbsp;</p>
   </div>
 
-  <div class="infinite" data-dojo-type="alerque/InfiniteContentPane">
+  <div class="infinite" data-dojo-type="alerque/InfiniteContentPane"
+    data-dojo-props="triggerHeight: 500">
     <script type="dojo/aspect" data-dojo-method="fetcher" data-dojo-args="count">
+      console.log("Ran fetch for test 2");
       var data = "<p>This is more data count " + count + "</p>";
       return (count <= 20) ? data : '';
     </script>
@@ -90,17 +95,20 @@
     <p>This is a littly more advanced. Still using declarative markup we define
       a fetcher function, but this time we check on how many times we've been
       called and stop returning data (thereby deactivating the widget) after
-      20 loads.</p>
-    <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
+      20 loads. The trigger height has been increased so it will load well
+      before you reach the end of the content.</p>
+    <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
+    <p style="height: 100%">&nbsp;</p>
   </div>
 
   <div class="infinite"
     data-dojo-type="alerque/InfiniteContentPane"
-    data-dojo-props="fetcher: demoData">
+    data-dojo-props="fetcher: demoData, triggerHeight: 1">
     <h2>Test 3</h2>
     <p>This one uses an predefined function to load data. This could be adapted
       to handle the case of an xhr request, etc.</p>
-    <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
+    <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
+    <p style="height: 100%">&nbsp;</p>
   </div>
 
 </body>
