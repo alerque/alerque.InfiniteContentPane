@@ -91,17 +91,15 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
     // lets us set a loading message and keeps content in order even if async
     // fetchers come back out of order.
 		var wrapper = domConstruct.create('div', {
-      'class': 'alerque-infinite-content',
-      'innerHTML': this.loadingMsg
+      'class': 'alerque-infinite-content'
     });
-    if (isUp) { this._markScroll(); }
 		domConstruct.place(wrapper, this.domNode, isUp ? 'first' : 'last');
-    if (isUp) { this._resetScroll(); }
+    this._setFetchedContent(wrapper, this.loadingMsg, isUp);
 
-		this._fetchersCount++;
 
     // Instantiate a new fetcher
     var fetcher = this._runFetcher(this.fetcher, wrapper, this._fetcherCount, isUp);
+		this._fetchersCount++;
 
     fetcher.then(lang.hitch(this, function(result) {
       // Scan for dojo declarative markup in new content
@@ -124,10 +122,7 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
 
     // Get content from the user supplied method
     var content = fetcher(count, isUp);
-
-    if (isUp) { this._markScroll(); }
-    html.set(wrapper, content);
-    if (isUp) { this._resetScroll(); }
+    this._setFetchedContent(wrapper, content, isUp);
 
     // If we get nothing back presume we've reached the end of the data
     if (!content.length) {
@@ -141,13 +136,12 @@ return declare("alerque.InfiniteContentPane", [ContentPane], {
     return deferred.promise;
   },
   
-  _markScroll: function() {
-    this._heightMark = this.domNode['scrollHeight'];
-  },
-
-  _resetScroll: function() {
-      var contentHeightChange = this.domNode['scrollHeight'] - this._heightMark;
-      this.domNode['scrollTop'] += contentHeightChange;
+  _setFetchedContent: function(node, content, isUp) {
+    var marker = this.domNode['scrollHeight'];
+    html.set(node, content);
+    if (isUp) {
+      this.domNode['scrollTop'] += this.domNode['scrollHeight'] - marker;
+    }
   },
 
 	_disable: function() {
