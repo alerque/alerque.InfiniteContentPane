@@ -15,7 +15,7 @@ define([
 	'dojo/parser',
 	'dojox/layout/ContentPane'
 ], function(declare, lang, Deferred, domConstruct, domGeometry, html, on,
-			parser, ContentPane) {
+			parser, ContentPane){
 return declare('alerque.InfiniteContentPane', [ContentPane], {
 	fetcher: null, // user supplied function that returns data
 	triggerHeight: 100, // how close (in pixel) to the bottom or top to fetch
@@ -29,7 +29,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 	_connect: null,
 	_heightMark: 0,
 
-	postCreate: function() {
+	postCreate: function(){
 		// Wire up scroll events to checking if we need more data
 		this._connect =
 			on(this.domNode, 'scroll', lang.hitch(this, '_onScroll'));
@@ -39,7 +39,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		return this.inherited(arguments);
 	},
 
-	resize: function() {
+	resize: function(){
 		// if we got resized, recalculate our size and then simulate a scroll
 		// event just to make sure we have the data we're supposted to
 		this._calc();
@@ -47,35 +47,35 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		return this.inherited(arguments);
 	},
 
-	_calc: function() {
+	_calc: function(){
 		// TODO: do some math to make sure trigger zone is a sane size of pane
 		this._paneHeight = domGeometry.position(this.domNode).h;
 		this._scrollHeight = this.domNode['scrollHeight'];
 	},
 
-	_onScroll: function(event) {
+	_onScroll: function(event){
 		// Find our current position
 		var bottomPos = this.domNode['scrollTop'] + this._paneHeight;
 
 		// Do the math to see if the trigger zone area has scrolled into view
-		if (bottomPos > (this._scrollHeight - this.triggerHeight)) {
+		if(bottomPos > (this._scrollHeight - this.triggerHeight)){
 			// As long as we aren't waiting on too much already, go fetch data
-			if (this._fetcherCount < this.maxFetchers) {
+			if(this._fetcherCount < this.maxFetchers){
 				this._fetch(false);
 			}
 		}
 
-		if (this.enableUp) {
-			if (this.domNode['scrollTop'] < this.triggerHeight) {
+		if(this.enableUp){
+			if(this.domNode['scrollTop'] < this.triggerHeight){
 				this._fetch(true);
 			}
 		}
 	},
 
-	_fetch: function(isUp) {
+	_fetch: function(isUp){
 		// TODO: test that fetcher is a function? object? In any case don't
 		// bother if we don't have one
-		if (!this.fetcher) {
+		if(!this.fetcher){
 			return this._disable();
 		}
 		this._fetcherCount += 1;
@@ -95,15 +95,15 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			this._runFetcher(this.fetcher, wrapper, this._fetcherCount, isUp);
 		this._fetcherCount++;
 
-		fetcher.then(lang.hitch(this, function(result) {
+		fetcher.then(lang.hitch(this, function(result){
 			// Scan for dojo declarative markup in new content
-			if (this.parseOnLoad) {
+			if(this.parseOnLoad){
 				parser.parse(wrapper);
 			}
 			// Update our knowledge about ourselves now that we stuffed new data
 			this._calc();
 			this._fetcherCount--;
-		}), lang.hitch(this, function(err) {
+		}), lang.hitch(this, function(err){
 			// If the fetcher is rejecting our request unwire it from out widget
 			return this._disable();
 		}));
@@ -111,7 +111,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 
 	// Wrap the user supplied content generator funtion in a deferred object to
 	// make it an async source no matter where the data is coming from
-	_runFetcher: function(fetcher, wrapper, count, isUp) {
+	_runFetcher: function(fetcher, wrapper, count, isUp){
 		var deferred = new Deferred();
 
 		// Get content from the user supplied method
@@ -119,7 +119,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		this._setFetchedContent(wrapper, content, isUp);
 
 		// If we get nothing back presume we've reached the end of the data
-		if (!content.length) {
+		if(!content.length){
 			deferred.reject();
 		}
 
@@ -130,15 +130,15 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		return deferred.promise;
 	},
 
-	_setFetchedContent: function(node, content, isUp) {
+	_setFetchedContent: function(node, content, isUp){
 		var marker = this.domNode['scrollHeight'];
 		html.set(node, content);
-		if (isUp) {
+		if(isUp){
 			this.domNode['scrollTop'] += this.domNode['scrollHeight'] - marker;
 		}
 	},
 
-	_disable: function() {
+	_disable: function(){
 		// If we stop getting data, unwire the scroll event to save resources
 		this._connect.remove();
 	}
