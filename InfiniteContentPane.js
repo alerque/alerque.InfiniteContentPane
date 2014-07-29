@@ -31,7 +31,6 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
   // Iterator showing how many times we've expanded. Might be useful to return
   // to our fetcher
   _fetcherCount: 0,
-  _fetchersCount: 0,
   // a handle for our on scroll event so we can shut it off the workings if we
   // run out of data
   _connect: null,
@@ -67,7 +66,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
     // Do the math to see if the trigger zone area has scrolled into view
     if (bottomPos > (this._scrollHeight - this.triggerHeight)) {
       // As long as we aren't waiting on too much already, go fetch data
-      if (this._fetchersCount < this.maxFetchers) {
+      if (this._fetcherCount < this.maxFetchers) {
         this._fetch(false);
       }
     }
@@ -100,7 +99,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
     // Instantiate a new fetcher
     var fetcher =
       this._runFetcher(this.fetcher, wrapper, this._fetcherCount, isUp);
-    this._fetchersCount++;
+    this._fetcherCount++;
 
     fetcher.then(lang.hitch(this, function(result) {
       // Scan for dojo declarative markup in new content
@@ -109,7 +108,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
       }
       // Update our knowledge about ourselves now that we stuffed new data
       this._calc();
-      this._fetchersCount--;
+      this._fetcherCount--;
     }), lang.hitch(this, function(err) {
       // If the fetcher is rejecting our request, unwire it from out widget
       return this._disable();
