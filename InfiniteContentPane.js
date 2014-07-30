@@ -50,12 +50,12 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 	_calc: function(){
 		// TODO: do some math to make sure trigger zone is a sane size of pane
 		this._paneHeight = domGeometry.position(this.domNode).h;
-		this._scrollHeight = this.domNode['scrollHeight'];
+		this._scrollHeight = this.domNode.scrollHeight;
 	},
 
 	_onScroll: function(event){
 		// Find our current position
-		var bottomPos = this.domNode['scrollTop'] + this._paneHeight;
+		var bottomPos = this.domNode.scrollTop + this._paneHeight;
 
 		// Do the math to see if the trigger zone area has scrolled into view
 		if(bottomPos > (this._scrollHeight - this.triggerHeight)){
@@ -66,7 +66,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		}
 
 		if(this.enableUp){
-			if(this.domNode['scrollTop'] < this.triggerHeight){
+			if(this.domNode.scrollTop < this.triggerHeight){
 				this._fetch(true);
 			}
 		}
@@ -131,10 +131,10 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 	},
 
 	_setFetchedContent: function(node, content, isUp){
-		var marker = this.domNode['scrollHeight'];
+		var marker = this.domNode.scrollHeight;
 		html.set(node, content);
 		if(isUp){
-			this.domNode['scrollTop'] += this.domNode['scrollHeight'] - marker;
+			this.domNode.scrollTop += this.domNode.scrollHeight - marker;
 		}
 	},
 
