@@ -25,7 +25,8 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 
 	_paneHeight: 0,
 	_scrollHeight: 0,
-	_fetcherCount: 0,
+	_totalFetchCount: 0,
+	_activeFetcherCount: 0,
 	_connect: null,
 	_heightMark: 0,
 
@@ -60,7 +61,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		// Do the math to see if the trigger zone area has scrolled into view
 		if(bottomPos > (this._scrollHeight - this.triggerHeight)){
 			// As long as we aren't waiting on too much already, go fetch data
-			if(this._fetcherCount < this.maxFetchers){
+			if(this._activeFetcherCount < this.maxFetchers){
 				this._fetch(false);
 			}
 		}
@@ -78,7 +79,6 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		if(!this.fetcher){
 			return this._disable();
 		}
-		this._fetcherCount += 1;
 
 		// Start a placeholder for content that we'll be fetching. Doing this
 		// early lets us set a loading message and keeps content in order even
@@ -92,8 +92,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 
 		// Instantiate a new fetcher
 		var fetcher =
-			this._runFetcher(this.fetcher, wrapper, this._fetcherCount, isUp);
-		this._fetcherCount++;
+			this._runFetcher(this.fetcher, wrapper, this._totalFetchCount, isUp);
 
 		fetcher.then(lang.hitch(this, function(result){
 			// Scan for dojo declarative markup in new content
@@ -102,7 +101,8 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			}
 			// Update our knowledge about ourselves now that we stuffed new data
 			this._calc();
-			this._fetcherCount--;
+			this._activeFetcherCount--;
+			this._totalFetchCount++;
 		}), lang.hitch(this, function(err){
 			// If the fetcher is rejecting our request unwire it from out widget
 			return this._disable();
@@ -112,6 +112,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 	// Wrap the user supplied content generator funtion in a deferred object to
 	// make it an async source no matter where the data is coming from
 	_runFetcher: function(fetcher, wrapper, count, isUp){
+		this._activeFetcherCount++;
 		var deferred = new Deferred();
 
 		// Get content from the user supplied method
