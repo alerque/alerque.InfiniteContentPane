@@ -1,8 +1,8 @@
 ### alerque.InfiniteContentPane
 
 (Formerly dojox.layout.InfiniteContentPane -- the move to an unused namespace
-makes it easier to siteload into projects until such a time as it actually gets
-included into the upstream dojox tree.)
+makes it easier to sideload into projects as an AMD module until such a time as
+it actually gets included into the upstream dojox tree.)
 
 An **infinite scrolling content pane** widget for the Dojo Toolkit inspired by
 (but not copied from) Paul Irish's [Infinite Scroll jQeruy plugin][piis].
