@@ -95,6 +95,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			this._runFetcher(this.fetcher, wrapper, this._totalFetchCount, isUp);
 
 		fetcher.then(lang.hitch(this, function(result){
+			this._setFetchedContent(wrapper, content, isUp);
 			// Scan for dojo declarative markup in new content
 			if(this.parseOnLoad){
 				parser.parse(wrapper);
@@ -113,22 +114,30 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 	// make it an async source no matter where the data is coming from
 	_runFetcher: function(fetcher, wrapper, count, isUp){
 		this._activeFetcherCount++;
-		var deferred = new Deferred();
 
 		// Get content from the user supplied method
 		var content = fetcher(count, isUp);
-		this._setFetchedContent(wrapper, content, isUp);
 
-		// If we get nothing back presume we've reached the end of the data
-		if(!content.length){
-			deferred.reject();
+		// Some fetchers might pass us a request or other promise object...
+		if (typeof content == 'object') {
+			return content;
+
+		// ...otherwise make one so this happens asychronously
+		} else {
+			var deferred = new Deferred();
+			this._setFetchedContent(wrapper, content, isUp);
+
+			// If we get nothing back presume we've reached the end of the data
+			if(!content.length){
+				deferred.reject();
+			}
+
+			// Let the pane know this data came back and it can try again form more
+			// when it runs out
+			deferred.resolve('success');
+
+			return deferred.promise;
 		}
-
-		// Let the pane know this data came back and it can try again form more
-		// when it runs out
-		deferred.resolve('success');
-
-		return deferred.promise;
 	},
 
 	_setFetchedContent: function(node, content, isUp){
