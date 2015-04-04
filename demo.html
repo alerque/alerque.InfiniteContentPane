@@ -16,7 +16,7 @@
     };
   </script>
 
-  <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.0/dojo/dojo.js">
+  <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js">
   </script>
 
   <script>
@@ -101,7 +101,7 @@
       no define the fetcher method, but this time it looks at the arguments that
       are passed in. This way it knows whether it is going up or down and also
       how many times data has been fetched. After 20 it will return a blank
-      string to let the widget know not to try to lead anything else. The
+      string to let the widget know not to try to load anything else. The
       trigger zone has also been reduced so it will not load new content until
       you actually hit the end of the pane.</p>
     <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
@@ -112,8 +112,8 @@
     data-dojo-type="alerque/InfiniteContentPane"
     data-dojo-props="fetcher: demoData, triggerHeight: 1000">
     <h2>Test 3</h2>
-    <p>This one uses a programatic function to load data. This could easily be
-      adapted to handle the case of an xhr request, etc. The trigger height
+    <p>This one uses a programmatic function to load data. This could easily be
+      adapted to handle the case of an XHR request, etc. The trigger height
       has been increased so it will load well before you reach the end of the
       content. In fact it will probably run on first page load.</p>
     <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
