@@ -95,7 +95,8 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			this._runFetcher(this.fetcher, wrapper, this._totalFetchCount, isUp);
 
 		fetcher.then(lang.hitch(this, function(result){
-			this._setFetchedContent(wrapper, content, isUp);
+			// Set the content of the pane to whatever our defered object returns
+			this._setFetchedContent(wrapper, result, isUp);
 			// Scan for dojo declarative markup in new content
 			if(this.parseOnLoad){
 				parser.parse(wrapper);
@@ -116,33 +117,33 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		this._activeFetcherCount++;
 
 		// Get content from the user supplied method
-		var content = fetcher(count, isUp);
+		var fetched_content = fetcher(count, isUp);
 
 		// Some fetchers might pass us a request or other promise object...
-		if (typeof content == 'object') {
-			return content;
+		if (typeof fetched_content == 'object') {
+			return fetched_content;
 
 		// ...otherwise make one so this happens asychronously
 		} else {
 			var deferred = new Deferred();
-			this._setFetchedContent(wrapper, content, isUp);
 
 			// If we get nothing back presume we've reached the end of the data
-			if(!content.length){
+			if(!fetched_content.length){
 				deferred.reject();
 			}
 
-			// Let the pane know this data came back and it can try again form more
-			// when it runs out
-			deferred.resolve('success');
+			// Return the data to the pane as the result of the a promise
+			deferred.resolve(fetched_content);
 
 			return deferred.promise;
 		}
 	},
 
-	_setFetchedContent: function(node, content, isUp){
+	_setFetchedContent: function(node, fetched_content, isUp){
 		var marker = this.domNode.scrollHeight;
-		html.set(node, content);
+		if (typeof fetched_content === "string") {
+			html.set(node, fetched_content);
+		}
 		if(isUp){
 			this.domNode.scrollTop += this.domNode.scrollHeight - marker;
 		}
