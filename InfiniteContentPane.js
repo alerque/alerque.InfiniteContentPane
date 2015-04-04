@@ -106,7 +106,9 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			this._activeFetcherCount--;
 			this._totalFetchCount++;
 		}), lang.hitch(this, function(err){
-			// If the fetcher is rejecting our request unwire it from out widget
+			// If the fetcher is rejecting our request unwire it from our widget
+			// and remove the loading message
+			this._setFetchedContent(wrapper, '', isUp);
 			return this._disable();
 		}));
 	},
