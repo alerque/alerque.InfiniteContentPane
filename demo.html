@@ -25,11 +25,37 @@
     require(["alerque/InfiniteContentPane"], function(InfiniteContentPane) {
     });
 
-    // Sample programatic method to supply data
+    // Sample programmatic method to supply data
     var demoData = function(count) {
       console.log("Ran fetch for test 3");
       return "<p>More data from an external loader run count " + count + "</p>";
     };
+    // Sample gizmo for use with defered XHR for data and keeping track of what
+    // data te send back
+    function demoData2 () {
+      // Offsets for how far up and down we've fetched
+      this.first = -1;
+      this.last = 1;
+
+      // Utility fuctions for figuring out what is before or after where we are
+      this.findPrev = function () {
+        return this.first--;
+      };
+      this.findNext = function () {
+        return this.last++;
+      };
+    };
+    require(["dojo/request"], function(request) {
+      // Fetcher method to be called by alerque.InfiniteContentPane widget
+      demoData2.prototype.download = function (count, isUp) {
+        offset = isUp ? this.findPrev() : this.findNext();
+        console.log("Ran fetch for test 4", offset);
+        return request("data.html", {
+            method: 'get',
+            data: { offset: offset }
+          });
+      };
+    });
   </script>
 
   <style>
@@ -48,7 +74,7 @@
     }
     .infinite {
       display: inline-block;
-      width: calc(33.33% - 1em);
+      width: calc(25% - 1em);
       height: calc(100% - 6em);
       background: #FFF;
       margin: 0;
@@ -116,6 +142,16 @@
       adapted to handle the case of an XHR request, etc. The trigger height
       has been increased so it will load well before you reach the end of the
       content. In fact it will probably run on first page load.</p>
+    <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
+    <p style="height: 100%">&nbsp;</p>
+  </div>
+
+  <div class="infinite"
+    data-dojo-type="alerque/InfiniteContentPane"
+    data-dojo-args="count, isUp"
+    data-dojo-props="fetcher: dojo.hitch(new demoData2(), 'download'), triggerHeight: 10, enableUp: true">
+    <h2>Test 4</h2>
+    <p>This one uses an XHR request with defered loading.</p>
     <!-- Spacer to make sure the demo actually ends up with a scrollbar -->
     <p style="height: 100%">&nbsp;</p>
   </div>
