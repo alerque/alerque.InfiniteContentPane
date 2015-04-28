@@ -34,7 +34,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 	postCreate: function(){
 		// Wire up scroll events to checking if we need more data
 		this._connect =
-			on(this.domNode, 'scroll', lang.hitch(this, '_onScroll'));
+			on.pausable(this.domNode, 'scroll', lang.hitch(this, '_onScroll'));
 		// Run a check on our data situation on instantiation
 		this._calc();
 		this._onScroll();
@@ -57,6 +57,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 	},
 
 	_onScroll: function(event) {
+		this._connect.pause();
 		// Find our current position
 		var bottomPos = this.domNode.scrollTop + this._paneHeight;
 
@@ -64,15 +65,16 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		if(bottomPos > (this._scrollHeight - this.triggerHeight)){
 			// As long as we aren't waiting on too much already, go fetch data
 			if(this._activeFetcherCount < this.maxFetchers){
-				this._fetch(false);
+				return this._fetch(false);
 			}
 		}
 
 		if(this.enableUp){
 			if(this.domNode.scrollTop < this.triggerHeight){
-				this._fetch(true);
+				return this._fetch(true);
 			}
 		}
+		this._connect.resume();
 	},
 
 	_fetch: function(isUp){
@@ -94,8 +96,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			'class': 'alerque-infinite-content'
 		});
 		domConstruct.place(wrapper, this.domNode, isUp ? 'first' : 'last');
-		this._setFetchedContent(wrapper, this.loadingMsg, isUp);
-
+		this._setLoadingMessage(wrapper);
 
 		// Instantiate a new fetcher
 		var fetcher =
@@ -116,10 +117,12 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			this._calc();
 			this._activeFetcherCount--;
 			this._totalFetchCount++;
+			this._connect.resume();
 		}), lang.hitch(this, function(err){
 			// If the fetcher is rejecting our request unwire it from our widget
 			// and remove the loading message
 			this._setFetchedContent(wrapper, '', isUp);
+			this._connect.resume();
 			return this._disable(isUp);
 		}));
 	},
@@ -150,6 +153,10 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 
 			return deferred.promise;
 		}
+	},
+
+	_setLoadingMessage: function(node){
+		html.set(node, this.loadingMsg);
 	},
 
 	_setFetchedContent: function(node, fetched_content, isUp){
