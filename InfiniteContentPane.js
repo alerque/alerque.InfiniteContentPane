@@ -28,6 +28,8 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 	_totalFetchCount: 0,
 	_activeFetcherCount: 0,
 	_connect: null,
+	_disableUp: false,
+	_disableDown: false,
 
 	postCreate: function(){
 		// Wire up scroll events to checking if we need more data
@@ -36,6 +38,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		// Run a check on our data situation on instantiation
 		this._calc();
 		this._onScroll();
+		this._disableUp = !this.enableUp;
 		return this.inherited(arguments);
 	},
 
@@ -78,6 +81,11 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		if(!this.fetcher){
 			return this._disable();
 		}
+		// If the fetcher has expressed a lack of content in a direction, don't
+		// bother polling it again
+		if ((isUp && this._disableUp) || (!isUp && this._disableDown)) {
+			return;
+		}
 
 		// Start a placeholder for content that we'll be fetching. Doing this
 		// early lets us set a loading message and keeps content in order even
@@ -96,6 +104,10 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		fetcher.then(lang.hitch(this, function(result){
 			// Set the content of the pane to whatever our defered object returns
 			this._setFetchedContent(wrapper, result, isUp);
+			if (result.length === 0) {
+				return this._disable(isUp);
+			}
+
 			// Scan for dojo declarative markup in new content
 			if(this.parseOnLoad){
 				parser.parse(wrapper);
@@ -108,7 +120,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			// If the fetcher is rejecting our request unwire it from our widget
 			// and remove the loading message
 			this._setFetchedContent(wrapper, '', isUp);
-			return this._disable();
+			return this._disable(isUp);
 		}));
 	},
 
@@ -150,10 +162,20 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		}
 	},
 
-	_disable: function(){
-		// If we stop getting data, unwire the scroll event to save resources
-		this._connect.remove();
+	// If we stop getting data, unwire the scroll event to save resources
+	_disable: function(isUp) {
+		if (typeof isUp === "undefined") {
+			this._connect.remove();
+		} else if (isUp) {
+			this._disableUp = true;
+		} else {
+			this._disableDown = true;
+		}
+		if (this._disableUp && this._disableDown) {
+			this._connect.remove();
+		}
 	}
+
 });
 });
 // vim:ts=4:noet:sw=4:tw=0:
