@@ -18,7 +18,7 @@ define([
 			parser, ContentPane){
 return declare('alerque.InfiniteContentPane', [ContentPane], {
 	fetcher: null, // user supplied function that returns data
-	triggerHeight: 100, // how close (in pixel) to the bottom or top to fetch
+	triggerHeight: 100, // how close (in pixels) to the bottom or top to fetch
 	maxFetchers: 1, // how many pending fetcher threads to allow
 	loadingMsg: '<p>Loading...</p>',
 	enableUp: false, // defaults to only expanding on scroll down
@@ -28,7 +28,6 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 	_totalFetchCount: 0,
 	_activeFetcherCount: 0,
 	_connect: null,
-	_heightMark: 0,
 
 	postCreate: function(){
 		// Wire up scroll events to checking if we need more data
@@ -54,7 +53,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		this._scrollHeight = this.domNode.scrollHeight;
 	},
 
-	_onScroll: function(event){
+	_onScroll: function(event) {
 		// Find our current position
 		var bottomPos = this.domNode.scrollTop + this._paneHeight;
 
@@ -113,7 +112,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		}));
 	},
 
-	// Wrap the user supplied content generator funtion in a deferred object to
+	// Wrap the user supplied content generator function in a deferred object to
 	// make it an async source no matter where the data is coming from
 	_runFetcher: function(fetcher, wrapper, count, isUp){
 		this._activeFetcherCount++;
