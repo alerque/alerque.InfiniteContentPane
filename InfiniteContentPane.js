@@ -86,7 +86,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		// If the fetcher has expressed a lack of content in a direction, don't
 		// bother polling it again
 		if ((isUp && this._disableUp) || (!isUp && this._disableDown)) {
-			return;
+			return this._disable(isUp);
 		}
 
 		// Start a placeholder for content that we'll be fetching. Doing this
@@ -122,7 +122,6 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			// If the fetcher is rejecting our request unwire it from our widget
 			// and remove the loading message
 			this._setFetchedContent(wrapper, '', isUp);
-			this._connect.resume();
 			return this._disable(isUp);
 		}));
 	},
@@ -171,6 +170,7 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 
 	// If we stop getting data, unwire the scroll event to save resources
 	_disable: function(isUp) {
+		this._connect.resume();
 		if (typeof isUp === "undefined") {
 			this._connect.remove();
 		} else if (isUp) {
