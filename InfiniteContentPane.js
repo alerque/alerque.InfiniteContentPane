@@ -13,20 +13,19 @@ define([
 	'dojo/html',
 	'dojo/on',
 	'dojo/parser',
+	'dojo/when',
 	'dojox/layout/ContentPane'
 ], function(declare, lang, Deferred, domConstruct, domGeometry, html, on,
-			parser, ContentPane){
+			parser, when, ContentPane){
 return declare('alerque.InfiniteContentPane', [ContentPane], {
 	fetcher: null, // user supplied function that returns data
 	triggerHeight: 100, // how close (in pixels) to the bottom or top to fetch
-	maxFetchers: 1, // how many pending fetcher threads to allow
 	loadingMsg: '<p>Loading...</p>',
 	enableUp: false, // defaults to only expanding on scroll down
 
 	_paneHeight: 0,
 	_scrollHeight: 0,
 	_totalFetchCount: 0,
-	_activeFetcherCount: 0,
 	_connect: null,
 	_disableUp: false,
 	_disableDown: false,
@@ -35,18 +34,15 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		// Wire up scroll events to checking if we need more data
 		this._connect =
 			on.pausable(this.domNode, 'scroll', lang.hitch(this, '_onScroll'));
-		// Run a check on our data situation on instantiation
-		this._calc();
-		this._onScroll();
 		this._disableUp = !this.enableUp;
 		return this.inherited(arguments);
 	},
 
 	resize: function(){
-		// if we got resized, recalculate our size and then simulate a scroll
-		// event just to make sure we have the data we're supposted to
-		this._calc();
-		this._onScroll();
+		// If we got resized, recalculate our size and then simulate a scroll
+		// event just to make sure we have the data we're supposted to, but
+		// prioritize loading down then checking for up...
+		when(this._onScroll(null, false), lang.hitch(this, '_onScroll', null, true));
 		return this.inherited(arguments);
 	},
 
@@ -56,25 +52,26 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		this._scrollHeight = this.domNode.scrollHeight;
 	},
 
-	_onScroll: function(event) {
+	_onScroll: function(event, recheck_direction) {
 		this._connect.pause();
+		var action = new Deferred();
+		this._calc();
 		// Find our current position
 		var bottomPos = this.domNode.scrollTop + this._paneHeight;
-
 		// Do the math to see if the trigger zone area has scrolled into view
-		if(bottomPos > (this._scrollHeight - this.triggerHeight)){
-			// As long as we aren't waiting on too much already, go fetch data
-			if(this._activeFetcherCount < this.maxFetchers){
-				return this._fetch(false);
-			}
+		if(bottomPos > (this._scrollHeight - this.triggerHeight) && recheck_direction !== true) {
+			action = when(this._fetch(false), lang.hitch(this, '_onScroll', null, false));
+		} else if (
+				this.enableUp &&
+				recheck_direction !== false &&
+				this.domNode.scrollTop < this.triggerHeight
+			){
+			action = when(this._fetch(true), lang.hitch(this, '_onScroll', null, true));
+		} else {
+			// If no loading actions were required, make sure the promise is resolved
+			action.resolve();
 		}
-
-		if(this.enableUp){
-			if(this.domNode.scrollTop < this.triggerHeight){
-				return this._fetch(true);
-			}
-		}
-		this._connect.resume();
+		return action.then(lang.hitch(this._connect, 'resume'));
 	},
 
 	_fetch: function(isUp){
@@ -115,7 +112,6 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			}
 			// Update our knowledge about ourselves now that we stuffed new data
 			this._calc();
-			this._activeFetcherCount--;
 			this._totalFetchCount++;
 			this._connect.resume();
 		}), lang.hitch(this, function(err){
@@ -124,13 +120,12 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 			this._setFetchedContent(wrapper, '', isUp);
 			return this._disable(isUp);
 		}));
+		return fetcher;
 	},
 
 	// Wrap the user supplied content generator function in a deferred object to
 	// make it an async source no matter where the data is coming from
 	_runFetcher: function(fetcher, wrapper, count, isUp){
-		this._activeFetcherCount++;
-
 		// Get content from the user supplied method
 		var fetched_content = fetcher(count, isUp);
 
