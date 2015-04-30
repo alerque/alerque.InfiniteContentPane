@@ -59,9 +59,14 @@ return declare('alerque.InfiniteContentPane', [ContentPane], {
 		// Find our current position
 		var bottomPos = this.domNode.scrollTop + this._paneHeight;
 		// Do the math to see if the trigger zone area has scrolled into view
-		if(bottomPos > (this._scrollHeight - this.triggerHeight) && recheck_direction !== true) {
+		if(
+				!this._disableDown &&
+				recheck_direction !== true &&
+				bottomPos > (this._scrollHeight - this.triggerHeight)
+			) {
 			action = when(this._fetch(false), lang.hitch(this, '_onScroll', null, false));
 		} else if (
+				!this._disableUp &&
 				this.enableUp &&
 				recheck_direction !== false &&
 				this.domNode.scrollTop < this.triggerHeight
