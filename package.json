@@ -1,7 +1,7 @@
 {
   "name": "alerque.InfiniteContentPane",
   "description": "Infinite scroll pane for Dojo",
-  "version": "0.2",
+  "version": "0.2.0",
   "repository": {
 	  "type": "git",
 	  "url": "https://github.com/alerque/alerque.InfiniteContentPane"
